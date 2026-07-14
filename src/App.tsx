@@ -1,0 +1,2316 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { motion, AnimatePresence, useScroll } from "motion/react";
+import { 
+  ChevronDown, Camera, Video, Radio, Layout, Users, Building2, Home, Megaphone, 
+  Phone, Mail, MapPin, ChevronLeft, Star, Quote, CheckCircle2, 
+  ArrowLeft, Share2, Twitter, Linkedin, MessageCircle, Instagram,
+  Facebook, Youtube, Send, AlertCircle, CheckCircle, Settings, 
+  Plus, Trash2, Globe, ExternalLink, Image as ImageIcon, Music2,
+  Heart, Lightbulb, Zap, Award, Briefcase, Coffee, Gift, Map,
+  Monitor, Smartphone, Tablet, Watch, Play, Pause, X, Maximize2,
+  Mic, Speaker, Film, Tv, Scissors, PenTool, Brush, Palette, Layers, Database, Cloud, Lock, Unlock,
+  Key, Shield, Bell, Calendar, Clock, Search, Filter, Wrench, ShoppingCart, CreditCard,
+  Truck, Plane, Train, Bike, Car, Anchor, Sun, Moon, CloudRain, Wind, Snowflake, Flame, Droplet, Languages, Volume2, VolumeX, Ghost, Menu
+} from "lucide-react";
+import React, { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useLanguage } from "./LanguageContext";
+import { CustomHeroSequence } from "./CustomHeroSequence";
+
+// --- Types ---
+
+interface Service {
+  id: string;
+  title: string;
+  desc: string;
+  iconName: string;
+  mediaType?: 'icon' | 'image' | 'url' | 'video';
+  mediaValue?: string;
+  cardBgImage?: string;
+}
+
+interface Work {
+  id: string;
+  title: string;
+  img: string;
+  videoUrl?: string;
+  category?: string;
+}
+
+interface SocialLink {
+  platform: string;
+  url: string;
+}
+
+interface Partner {
+  id: string;
+  name: string;
+  logo: string;
+}
+
+interface AppData {
+  services: Service[];
+  works: Work[];
+  partners?: Partner[];
+  socialLinks: SocialLink[];
+  heroVideoUrl?: string;
+}
+
+export const getGridSpanClass = (index: number, total: number) => {
+  if (total % 3 === 0) return 'col-span-2';
+  if (total === 8) return index < 2 ? 'col-span-3' : 'col-span-2';
+  if (total === 7) return (index < 2 || index > 4) ? 'col-span-3' : 'col-span-2';
+  if (total === 5) return index < 2 ? 'col-span-3' : 'col-span-2';
+  if (total === 4) return 'col-span-3';
+  if (total === 2) return 'col-span-3';
+  return 'col-span-6';
+};
+
+const INITIAL_DATA: AppData = {
+  heroVideoUrl: 'https://eventliveksa.com/assets/videos/04-openings/1-%20%D9%85%D8%B7%D8%B9%D9%85%20%D8%AC%D8%A7%D8%B1%D8%AF%D9%86%20%D9%84%D8%A7%D9%8A%D8%AA.webm',
+  services: [
+    { id: '1', title: "المعارض", desc: "نبرز حضوركم المميز من خلال تغطية احترافية تشمل أجنحة الزوار والفعاليات المصاحبة، بواسطة كاميرات احترافية ودرون.", iconName: 'Layout', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg' },
+    { id: '2', title: "المهرجانات", desc: "نوثق أجواء المهرجانات بكل تفاصيلها، من لحظات التفاعل الجماهيري إلى العروض الترفيهية، مع إنتاج فيديوهات مميزة.", iconName: 'Users', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg' },
+    { id: '3', title: "الفعاليات الوطنية", desc: "نعيش معكم روح المناسبة وننقل مشاعر الفخر والانتماء بعدسة فنية، نوثق الفقرات الرسمية والجماهير بأسلوب يليق بالوطن.", iconName: 'Star', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg' },
+    { id: '4', title: "حفلات الافتتاح", desc: "نحوّل لحظات الافتتاح إلى قصة مرئية تُحكى، نوثق استقبال الضيوف، لحظة قص الشريط، ونصنع فيديو مختصر «هايلايت».", iconName: 'Camera', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg' },
+    { id: '5', title: "المؤتمرات", desc: "نقدم تغطية مؤتمرات ومعارض احترافية، نوثق كل لحظة من الكلمات الرسمية إلى جلسات النقاش، مع إمكانيات البث المباشر.", iconName: 'Radio', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983656/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_%D9%84%D9%8A%D8%A8_vu6dyk.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983656/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_%D9%84%D9%8A%D8%A8_vu6dyk.jpg' },
+    { id: '6', title: "الفعاليات المؤسسية", desc: "نُقدّم تغطيات احترافية لفعاليات الشركات، المؤتمرات والاجتماعات، مع إبراز الهوية المؤسسية وتوفير خدمة البث المباشر.", iconName: 'Building2', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983618/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D9%85%D8%AA%D9%88%D9%86_bil8su.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983618/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D9%85%D8%AA%D9%88%D9%86_bil8su.jpg' },
+    { id: '7', title: "البث المباشر", desc: "نقدم خدمات البث المباشر الاحترافية للفعاليات والمؤتمرات بجودة عالية وتغطية شاملة تضمن وصول رسالتكم لأوسع جمهور.", iconName: 'Video', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983614/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA_uq6qrv.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983614/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA_uq6qrv.jpg' },
+    { id: '8', title: "الإعلانات التجارية", desc: "نصمم محتوى بصري إبداعي يُبرز كل منتج بأفضل صورة، مع إعداد ستايل تصوير مميز وإخراج احترافي.", iconName: 'Megaphone', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg' },
+  ],
+  works: [
+    { id: "1", title: "معرض", category: "المعارض", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_Eater_expo_-_%D9%85%D8%B9%D8%B1%D8%B6_mowtnv.jpg" },
+    { id: "2", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg" },
+    { id: "3", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg" },
+    { id: "4", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983458/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9469_f2hdtk.jpg" },
+    { id: "5", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg" },
+    { id: "6", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983461/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9488_zzkl6a.jpg" },
+    { id: "7", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983464/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9494_jrd1zg.jpg" },
+    { id: "8", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983465/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9502_ehjl2v.jpg" },
+    { id: "9", title: "معرض", category: "المعارض", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983467/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_Water_expo_ch1ti3.jpg" },
+    { id: "10", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983455/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_zdceym.jpg" },
+    { id: "11", title: "يوم التأسيس", category: "الفعاليات الوطنية", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983589/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A3%D9%85%D8%A7%D8%B2%D9%88%D9%86_%D9%8A%D9%88%D9%85_%D8%A7%D9%84%D8%AA%D8%A7%D8%B3%D9%8A%D8%B3_u6cbif.jpg" },
+    { id: "12", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983601/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_kwfbbz.jpg" },
+    { id: "13", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983599/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_t951me.jpg" },
+    { id: "14", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg" },
+    { id: "15", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983596/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_hkiymi.jpg" },
+    { id: "16", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983597/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D9%85%D8%B7%D8%B9%D9%85_%D9%88%D8%B1%D8%AF%D9%87_aemx3v.jpg" },
+    { id: "17", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983603/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD%D8%A7%D8%AA_%D9%85%D8%B7%D8%B9%D9%85_%D8%AD%D8%A7%D8%B4%D9%8A%D9%83%D9%85_zgrbpg.jpg" }
+  ],
+  socialLinks: [
+    { platform: 'twitter', url: 'https://twitter.com/eventliveksa' },
+    { platform: 'instagram', url: 'https://instagram.com/eventliveksa' },
+    { platform: 'linkedin', url: 'https://linkedin.com/company/eventliveksa' },
+    { platform: 'snapchat', url: 'https://snapchat.com/add/eventliveksa' },
+    { platform: 'tiktok', url: 'https://tiktok.com/@eventliveksa' }
+  ]
+};
+
+const IconMap: Record<string, any> = {
+  Layout, Users, Star, Camera, Radio, Building2, Home, Megaphone, Video, Globe, Music2,
+  Heart, Lightbulb, Zap, Award, Briefcase, Coffee, Gift, Map, Monitor, Smartphone, Tablet, Watch,
+  Mic, Speaker, Film, Tv, Scissors, PenTool, Brush, Palette, Layers, Database, Cloud, Lock, Unlock,
+  Key, Shield, Bell, Calendar, Clock, Search, Filter, Settings, Wrench, ShoppingCart, CreditCard,
+  Truck, Plane, Train, Bike, Car, Anchor, Sun, Moon, CloudRain, Wind, Snowflake, Flame, Droplet
+};
+
+// --- Components ---
+
+const HoverLinkGroup = ({ links, className = "space-y-4", id = "group" }: { links: { label: string, href: string }[], className?: string, id?: string }) => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  return (
+    <ul className={`relative z-20 ${className}`} onMouseLeave={() => setHoveredIndex(null)}>
+      {links.map((link, idx) => (
+        <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
+          <a href={link.href} className="relative z-10 block px-4 py-2 font-bold text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors duration-300 cursor-pointer pointer-events-auto">
+            {link.label}
+          </a>
+          {hoveredIndex === idx && (
+            <motion.div
+              layoutId={`hover-bg-${id}`}
+              className="absolute inset-0 bg-gradient-to-r from-amber-500/80 to-amber-300/80 dark:from-amber-600/50 dark:to-orange-500/50 rounded-lg -z-0 backdrop-blur-md shadow-[0_0_15px_rgba(255,138,0,0.5)] pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+
+const MouseFollower = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <motion.div 
+      animate={{ x: mousePos.x - 150, y: mousePos.y - 150 }}
+      transition={{ type: "spring", damping: 30, stiffness: 200, mass: 0.5 }}
+      className="fixed inset-0 pointer-events-none z-[9999] hidden md:block"
+    >
+      <div className="w-[300px] h-[300px] bg-[#FF8A00]/10 blur-[100px] rounded-full"></div>
+    </motion.div>
+  );
+};
+
+const SectionWrapper = ({ children, id, className = "", ...props }: { children: React.ReactNode, id?: string, className?: string } & React.HTMLAttributes<HTMLElement>) => {
+  return (
+    <section id={id} className={`section-padding relative overflow-hidden ${className}`} {...props}>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-7xl mx-auto px-6 relative z-10"
+      >
+        {children}
+      </motion.div>
+      
+      {/* Animated Gradient Border Overlay (Optional, can be applied to specific containers) */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+    </section>
+  );
+};
+
+const ScrollReveal = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, key?: React.Key, className?: string }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const AnimatedTitle = ({ text, className = "" }: { text: string, className?: string }) => {
+  return (
+    <h2 className={`overflow-hidden flex flex-wrap justify-center ${className}`}>
+      {text.split(" ").map((word, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="inline-block mx-1"
+        >
+          {word}
+        </motion.span>
+      ))}
+    </h2>
+  );
+};
+
+const bounceAnimation = {
+  y: [0, -10, 0],
+  transition: {
+    duration: 0.4,
+    ease: "easeInOut",
+    repeat: 1
+  }
+};
+
+
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
+
+const ThemeToggle = () => {
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    if (document.documentElement.classList.contains('dark')) {
+      setIsDark(true);
+    } else {
+      setIsDark(false);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      setIsDark(false);
+    } else {
+      document.documentElement.classList.add('dark');
+      setIsDark(true);
+    }
+  };
+
+  return (
+    <button onClick={toggleTheme} className="p-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-amber-500">
+      {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+    </button>
+  );
+};
+
+
+const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: () => void, isAdminMode: boolean, onQuoteClick: () => void }) => {
+  const { language, setLanguage, t } = useLanguage();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinks = [
+    { label: t('nav.home'), href: '#home', icon: <Camera className="w-5 h-5" /> },
+    { label: t('nav.services'), href: '#services', icon: <Layout className="w-5 h-5" /> },
+    { label: t('nav.portfolio'), href: '#portfolio', icon: <Play className="w-5 h-5" /> },
+    { label: t('nav.faq'), href: '#faq', icon: <MessageCircle className="w-5 h-5" /> },
+    { label: t('nav.contact'), href: '#contact', icon: <Phone className="w-5 h-5" /> }
+  ];
+
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  return (
+    <>
+
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex fixed top-10 left-0 right-0 z-[90] h-20 items-center px-8 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm transition-all justify-between">
+        {/* Empty left space to balance the right side controls */}
+        <div className="w-[100px] xl:w-[200px]"></div>
+        
+        <div className="flex-1 flex justify-center relative">
+          <ul className="flex items-center gap-2 md:gap-4" onMouseLeave={() => setHoveredIndex(null)}>
+            {navLinks.slice(0, 2).map((link, idx) => (
+              <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
+                <a 
+                  href={link.href} 
+                  className="relative z-10 flex items-center gap-2 px-4 py-2 font-bold text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors duration-300 text-sm lg:text-base"
+                >
+                  {link.icon}
+                  {link.label}
+                </a>
+                {hoveredIndex === idx && (
+                  <motion.div
+                    layoutId="mercury-desktop-nav"
+                    className="absolute inset-0 bg-gradient-to-r from-amber-500/80 to-amber-300/80 dark:from-amber-600/50 dark:to-orange-500/50 rounded-xl -z-0 backdrop-blur-md shadow-[0_0_15px_rgba(255,138,0,0.5)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </li>
+            ))}
+            
+            <li className="mx-2 lg:mx-6 flex items-center justify-center relative z-10">
+              <a href="#home" className="flex items-center">
+                <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300" />
+              </a>
+            </li>
+
+            {navLinks.slice(2).map((link, i) => {
+              const idx = i + 2;
+              return (
+              <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
+                <a 
+                  href={link.href} 
+                  className="relative z-10 flex items-center gap-2 px-4 py-2 font-bold text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors duration-300 text-sm lg:text-base"
+                >
+                  {link.icon}
+                  {link.label}
+                </a>
+                {hoveredIndex === idx && (
+                  <motion.div
+                    layoutId="mercury-desktop-nav"
+                    className="absolute inset-0 bg-gradient-to-r from-amber-500/80 to-amber-300/80 dark:from-amber-600/50 dark:to-orange-500/50 rounded-xl -z-0 backdrop-blur-md shadow-[0_0_15px_rgba(255,138,0,0.5)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </li>
+            )})}
+          </ul>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+            className="px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm"
+          >
+            {language === 'ar' ? 'English' : 'عربي'}
+          </button>
+          <ThemeToggle />
+          <button 
+            onClick={onAdminClick}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isAdminMode ? 'bg-amber-500 text-black' : 'bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10'}`}
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={onQuoteClick}
+            className="btn-primary px-6 py-2 text-sm hidden lg:block"
+          >
+            {t('hero.cta')}
+          </button>
+        </div>
+      </div>
+      {/* Mobile Navigation Header */}
+      <div className="md:hidden fixed top-10 left-0 right-0 z-[100] h-16 flex items-center justify-between px-4 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm">
+        <div className="flex-1"></div>
+        <a href="#home" className="flex items-center justify-center flex-1">
+          <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+        </a>
+        <div className="flex-1 flex justify-end">
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-10 h-10 bg-black/80 dark:bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/10 shadow-md hover:bg-amber-500 hover:text-black transition-colors"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+            className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[90]"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        initial={{ x: language === 'ar' ? "-100%" : "100%" }}
+        animate={{ x: isOpen ? 0 : (language === 'ar' ? "-100%" : "100%") }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className={`md:hidden fixed top-0 bottom-0 w-[280px] bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-3xl z-[95] border-black/10 dark:border-white/10 flex flex-col p-6 shadow-2xl ${language === "ar" ? "left-0 border-r" : "right-0 border-l"}`}
+      >
+        <div className="flex items-center gap-2 mb-10 mt-2">
+          <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+        </div>
+
+        <ul className="space-y-2 flex-1" onMouseLeave={() => setHoveredIndex(null)}>
+          {navLinks.map((link, idx) => (
+            <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
+              <a 
+                href={link.href} 
+                onClick={(e) => {
+                  setIsOpen(false);
+                }}
+                className="relative z-10 flex items-center gap-4 px-4 py-3 font-bold text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors duration-300"
+              >
+                {link.icon}
+                {link.label}
+              </a>
+              {hoveredIndex === idx && (
+                <motion.div
+                  layoutId="mercury-sidebar"
+                  className="absolute inset-0 bg-gradient-to-r from-amber-500/80 to-amber-300/80 dark:from-amber-600/50 dark:to-orange-500/50 rounded-xl -z-0 backdrop-blur-md shadow-[0_0_15px_rgba(255,138,0,0.5)]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-black/10 dark:border-white/10">
+          <div className="flex items-center justify-between">
+            <button 
+              onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+              className="px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 font-bold hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+            >
+              {language === 'ar' ? 'English' : 'عربي'}
+            </button>
+            <ThemeToggle />
+          </div>
+          
+          <button onClick={onQuoteClick} className="w-full py-3 bg-gradient-to-r from-[#FF8A00] to-[#FFC300] text-black font-black rounded-xl hover:shadow-[0_0_20px_rgba(255,138,0,0.4)] transition-all">
+            {t('hero.cta')}
+          </button>
+
+          <button 
+            onClick={() => { setIsOpen(false); onAdminClick(); }}
+            className={`w-full py-3 rounded-xl flex items-center justify-center gap-2 font-bold transition-all ${isAdminMode ? 'bg-amber-500 text-black' : 'bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10'}`}
+          >
+            <Settings className="w-5 h-5" />
+            {t('nav.admin')}
+          </button>
+        </div>
+      </motion.div>
+    </>
+  );
+};
+const Counter = ({ value, duration = 2, suffix = "" }: { value: number, duration?: number, suffix?: string }) => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <motion.span
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      onViewportEnter={() => {
+        let start = 0;
+        const end = value;
+        const totalFrames = duration * 60;
+        let frame = 0;
+        
+        const timer = setInterval(() => {
+          frame++;
+          const progress = frame / totalFrames;
+          setCount(Math.floor(end * progress));
+          if (frame === totalFrames) clearInterval(timer);
+        }, 1000 / 60);
+      }}
+      viewport={{ once: true }}
+    >
+      {count}{suffix}
+    </motion.span>
+  );
+};
+
+const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () => void }) => {
+  const { t, language } = useLanguage();
+  const [isMuted, setIsMuted] = useState(true);
+
+  // If videoUrl is provided from config, use it. Otherwise use a fallback image.
+  // The user requested to use the custom webm video natively.
+  const isYoutube = videoUrl?.includes('youtube.com') || videoUrl?.includes('youtu.be');
+  
+  const getYoutubeEmbedUrl = (url: string) => {
+    if (!url) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}?autoplay=1&mute=1&loop=1&playlist=${match[2]}&controls=0&showinfo=0&rel=0&iv_load_policy=3`;
+    }
+    return url;
+  };
+
+  const embedUrl = isYoutube && videoUrl ? getYoutubeEmbedUrl(videoUrl) : '';
+
+  return (
+    <section id="home" className="relative min-h-[100svh] flex flex-col md:flex-row md:items-center pt-20 overflow-hidden dark border-b border-white/10 bg-[#0a0a0a]">
+      {/* Background Video/Image (Desktop) & Inline Video (Mobile) */}
+      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
+        <CameraFrameOverlay />
+        {videoUrl ? (
+          isYoutube ? (
+            <div className="w-full h-full scale-110">
+              <iframe 
+                src={embedUrl}
+                className="w-full h-full pointer-events-none object-cover"
+                allow="autoplay; encrypted-media"
+                title="Hero Background"
+              ></iframe>
+            </div>
+          ) : (
+            <div className="w-full h-full relative">
+              <video 
+                src={videoUrl}
+                autoPlay
+                muted={isMuted}
+                loop
+                playsInline
+                poster="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
+                className="w-full h-full object-cover bg-black"
+                style={{ objectPosition: 'center center' }}
+              />
+              <button 
+                onClick={() => setIsMuted(!isMuted)}
+                className="absolute bottom-4 rtl:right-4 ltr:left-4 md:bottom-8 md:rtl:right-8 md:ltr:left-8 z-50 p-2 md:p-4 rounded-full bg-black/30 backdrop-blur-md border border-white/10 text-white hover:bg-black/50 transition-colors hover:scale-110 active:scale-95 group"
+                aria-label={isMuted ? "فتح الصوت" : "إغلاق الصوت"}
+              >
+                {isMuted ? (
+                  <VolumeX className="w-4 h-4 md:w-6 md:h-6 group-hover:text-amber-500 transition-colors" />
+                ) : (
+                  <Volume2 className="w-4 h-4 md:w-6 md:h-6 group-hover:text-amber-500 transition-colors" />
+                )}
+              </button>
+            </div>
+          )
+        ) : (
+          <img 
+            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070" 
+            className="w-full h-full object-cover opacity-60 md:opacity-40"
+            alt="خلفية لفعالية حية"
+            loading="eager"
+            referrerPolicy="no-referrer"
+          />
+        )}
+        
+        {/* Dark Overlay for text clarity on desktop */}
+        <div className="absolute inset-0 bg-black/40 dark:bg-black/50 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/40 to-transparent pointer-events-none"></div>
+      </div>
+
+
+
+      {/* Animated Light Beams (Desktop only) */}
+      <div className="hidden md:block absolute inset-0 opacity-30 pointer-events-none z-0">
+        <motion.div 
+          animate={{ 
+            x: ["-100%", "100%"],
+            opacity: [0, 1, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 bottom-0 w-[500px] bg-gradient-to-r from-transparent via-[#FF8A00]/20 to-transparent skew-x-12"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-10 md:py-20 flex-1 flex flex-col justify-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="max-w-4xl"
+        >
+
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/20 text-amber-500 md:text-amber-400 text-sm font-black mb-8"
+          >
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+            {t('hero.badge')}
+          </motion.div>
+          
+          <CustomHeroSequence />
+          
+          <div className="flex flex-wrap gap-4 md:gap-6 relative z-10 mt-6">
+            <motion.button 
+              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255,138,0,0.5)" }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onQuoteClick} 
+              className="btn-primary text-base md:text-lg px-8 py-4 md:px-10 md:py-5 relative w-full sm:w-auto"
+            >
+              {t('hero.cta')}
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => document.getElementById('portfolio')?.scrollIntoView()} 
+              className="btn-glass text-base md:text-lg px-8 py-4 md:px-10 md:py-5 w-full sm:w-auto text-center"
+            >
+              {t('hero.portfolio')}
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+const StatsSection = () => {
+  const { t, language } = useLanguage();
+  return (
+    <SectionWrapper id="stats" className="bg-gray-50 dark:bg-[#050505] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-10 md:mb-16">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-[40px] font-semibold text-black dark:text-white mb-6 md:mb-8 title-accent-center heading-gradient"
+          >
+            {t("stats.title")}
+          </motion.h2>
+        </div>
+        
+        <div className="animated-border-container group">
+          <div className="animated-border-gradient"></div>
+          
+          <div className="relative z-10 bg-gray-50 dark:bg-[#050505] rounded-[22px] p-6 md:p-20 border border-black/5 dark:border-white/5">
+            <div className="grid grid-cols-3 gap-4 md:gap-12">
+              <div className="flex flex-col items-center text-center">
+                <div className="text-3xl sm:text-4xl md:text-8xl font-black text-gradient mb-2 md:mb-4 drop-shadow-[0_0_20px_rgba(255,138,0,0.3)]">
+                  <Counter value={348} />
+                </div>
+                <div className="text-[10px] md:text-lg text-black/50 dark:text-white/50 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.events")}</div>
+              </div>
+              
+              <div className="flex flex-col items-center text-center border-x border-black/10 dark:border-white/10 px-2 md:px-0">
+                <div className="text-3xl sm:text-4xl md:text-8xl font-black text-gradient mb-2 md:mb-4 drop-shadow-[0_0_20px_rgba(255,138,0,0.3)]">
+                  <Counter value={8} />
+                </div>
+                <div className="text-[10px] md:text-lg text-black/50 dark:text-white/50 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.years")}</div>
+              </div>
+              
+              <div className="flex flex-col items-center text-center">
+                <div className="text-3xl sm:text-4xl md:text-8xl font-black text-gradient mb-2 md:mb-4 drop-shadow-[0_0_20px_rgba(255,138,0,0.3)]">
+                  <Counter value={98} suffix="%" />
+                </div>
+                <div className="text-[10px] md:text-lg text-black/50 dark:text-white/50 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.clients")}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+};
+
+
+const Services = ({ services }: { services: Service[] }) => {
+  const { t, language } = useLanguage();
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick(prev => prev + 1);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fallbackImages = [
+    'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1533174000255-124b17551000?auto=format&fit=crop&q=80&w=800',
+  ];
+
+  const getYoutubeEmbedUrl = (url: string) => {
+    if (!url) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}?autoplay=1&mute=1&loop=1&playlist=${match[2]}&controls=0&showinfo=0&rel=0&iv_load_policy=3`;
+    }
+    return url;
+  };
+
+  return (
+    <SectionWrapper id="services" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
+      <div className="text-center mb-12 md:mb-20">
+        <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 md:mb-8 title-accent-center heading-gradient truncate w-full max-w-full block">{t("services.title")}</h2>
+        <p className="text-black/50 dark:text-white/50 max-w-[70ch] mx-auto text-base md:text-[18px] font-normal px-4">
+          {t("services.subtitle")}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-6 gap-2 sm:gap-4 md:gap-8 pb-8 w-full px-2 sm:px-4">
+        {services.map((s, i) => {
+          const Icon = IconMap[s.iconName] || Layout;
+          const spanClass = getGridSpanClass(i, services.length);
+
+
+          return (
+            <motion.div 
+              key={s.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              
+              className={`bg-white dark:bg-[#111] p-5 md:p-8 rounded-[2rem] transition-all duration-500 group cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[160px] sm:min-h-[250px] md:min-h-[350px] flex-shrink-0 w-full shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-t border-l border-white/80 dark:border-white/10 border-b-4 border-r-4 border-black/5 dark:border-black/40 hover:-translate-y-2 hover:border-amber-500/30 dark:hover:border-amber-500/30 hover:shadow-[0_20px_40px_rgba(255,138,0,0.15)] ${spanClass}`}
+            >
+              {s.cardBgImage && (
+                <>
+                  <img 
+                    src={s.cardBgImage} 
+                    alt={s.title} 
+                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${s.id === '7' ? 'animate-blur-pulse group-hover:blur-none' : 'blur-[8px] group-hover:blur-none'} group-hover:scale-110 z-0 scale-105`}
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500 z-0"></div>
+                </>
+              )}
+
+              {/* Radial Light Effect */}
+              <div className="absolute -top-24 rtl:-right-2 ltr:-left-2 w-48 h-48 bg-amber-500/5 dark:bg-amber-500/10 blur-[80px] rounded-full group-hover:bg-amber-500/10 dark:group-hover:bg-amber-500/20 transition-colors duration-500 z-0"></div>
+              
+              <div className="mb-2 sm:mb-4 md:mb-8 p-2 sm:p-4 md:p-6 rounded-[12px] sm:rounded-[22px] bg-gradient-to-br from-white dark:from-[#222] to-gray-50 dark:to-[#111] border-t border-l border-white/80 dark:border-white/10 border-b-2 border-r-2 border-black/5 dark:border-black/40 shadow-lg w-fit group-hover:scale-110 transition-transform duration-500 relative flex items-center justify-center z-10">
+                {/* Glow Effect Behind Icon */}
+                <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/30 blur-xl transition-all duration-500 rounded-full scale-50 group-hover:scale-150 z-0"></div>
+                
+                <motion.div whileHover={bounceAnimation} animate={{ y: [0, -4, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: i * 0.1 }} className={`relative z-10 w-6 h-6 sm:w-10 sm:h-10 md:w-14 md:h-14 flex items-center justify-center ${s.cardBgImage ? 'text-white' : 'text-[#111] dark:text-white'}`}>
+                  <Icon className="w-8 h-8 md:w-12 md:h-12" />
+                </motion.div>
+                {/* Inner Light Reflection */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none rounded-[12px] sm:rounded-[22px]"></div>
+              </div>
+              
+              <div>
+                <h3 className={`text-[10px] sm:text-base md:text-[22px] font-bold md:font-medium mb-1 sm:mb-2 md:mb-6 group-hover:text-amber-500 transition-colors duration-300 relative z-10 ${s.cardBgImage ? 'text-white' : 'text-[#111] dark:text-white'}`}>{t(`service.${s.id}.title`) || s.title}</h3>
+                <p className={`text-[8px] sm:text-xs md:text-[16px] leading-tight sm:leading-relaxed md:leading-[1.75] font-normal relative z-10 line-clamp-2 md:line-clamp-none ${s.cardBgImage ? 'text-white/90' : 'text-[#111]/80 dark:text-white/80'}`}>{t(`service.${s.id}.desc`) || s.desc}</p>
+              </div>
+              
+              {/* Bottom Gradient Line */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </SectionWrapper>
+  );
+};
+
+const PortfolioMediaContent = ({ w, isYoutube, getYoutubeEmbedUrl, selectedWork }: { w: Work, isYoutube: (url: string) => boolean, getYoutubeEmbedUrl: (url: string, isLightbox?: boolean) => string, selectedWork: Work | null }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const hasVideo = !!w.videoUrl;
+  const handleLoad = () => setIsLoaded(true);
+
+  return (
+    <>
+      <div className={`absolute inset-0 bg-black/10 dark:bg-white/10 animate-pulse z-0 transition-opacity duration-500 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}></div>
+      {hasVideo && !selectedWork ? (
+        isYoutube(w.videoUrl!) ? (
+          <iframe 
+            src={getYoutubeEmbedUrl(w.videoUrl!)}
+            className={`w-full h-full pointer-events-none scale-150 relative z-10 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            allow="autoplay; encrypted-media"
+            title={w.title}
+            loading="lazy"
+            onLoad={handleLoad}
+          ></iframe>
+        ) : (
+          <video 
+            src={w.videoUrl} 
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
+            className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoadedData={handleLoad}
+          />
+        )
+      ) : (
+        <img 
+          src={w.img} 
+          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 relative z-10 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
+          alt={w.title}
+          loading="lazy"
+          onLoad={handleLoad}
+        />
+      )}
+    </>
+  );
+};
+
+const Portfolio = ({ works }: { works: Work[] }) => {
+  const { t, language } = useLanguage();
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>('portfolio.all');
+
+  const categories = ['portfolio.all', 'المعارض', 'حفلات الافتتاح', 'الفعاليات الوطنية', 'المؤتمرات والمهرجانات'];
+  
+  const getCategoryTranslation = (cat: string) => {
+    if (cat === 'portfolio.all') return t('portfolio.all');
+    if (cat === 'المعارض') return t('service.1.title') || 'Exhibitions';
+    if (cat === 'حفلات الافتتاح') return t('service.4.title') || 'Opening Ceremonies';
+    if (cat === 'الفعاليات الوطنية') return t('service.3.title') || 'National Events';
+    if (cat === 'المؤتمرات والمهرجانات') return language === 'ar' ? 'المؤتمرات والمهرجانات' : 'Conferences & Festivals';
+    return cat;
+  };
+  const albums = categories.filter(c => c !== 'portfolio.all').map(cat => ({
+    name: cat,
+    works: works.filter(w => w.category === cat)
+  })).filter(album => album.works.length > 0);
+
+  const filteredWorks = works.filter(w => {
+    if (activeCategory === 'portfolio.all') return true;
+    return w.category === activeCategory;
+  });
+  
+  const selectedWork = selectedIndex !== null ? filteredWorks[selectedIndex] : null;
+
+  useEffect(() => {
+    // Preload images for smooth horizontal scrolling
+    filteredWorks.forEach(work => {
+      if (work.img) {
+        const img = new Image();
+        img.src = work.img;
+      }
+    });
+  }, [filteredWorks]);
+
+  const isYoutube = (url: string) => url.includes('youtube.com') || url.includes('youtu.be');
+
+  const getYoutubeEmbedUrl = (url: string, isLightbox = false) => {
+    if (!url) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return isLightbox 
+        ? `https://www.youtube.com/embed/${match[2]}?autoplay=1&rel=0`
+        : `https://www.youtube.com/embed/${match[2]}?autoplay=1&mute=1&loop=1&playlist=${match[2]}&controls=0`;
+    }
+    return url;
+  };
+
+  return (
+    <SectionWrapper id="portfolio" className="py-12 md:py-16 border-b border-black/5 dark:border-white/5">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+        <div>
+          <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 title-accent heading-gradient truncate w-full max-w-full block">{t('portfolio.title')}</h2>
+          <p className="text-black/50 dark:text-white/50 max-w-[60ch] text-[18px] font-normal">
+            {t('portfolio.subtitle')}
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <div className="w-16 h-16 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-amber-500 group hover:border-amber-500 transition-colors cursor-pointer">
+            <ArrowLeft className="w-6 h-6 rotate-45 group-hover:rotate-0 transition-transform" />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-center items-center w-full min-h-[400px] md:min-h-[500px] py-10 overflow-hidden">
+        <div 
+          className="relative group cursor-pointer w-full max-w-[280px] sm:max-w-sm md:max-w-md aspect-[4/5] mx-auto"
+          style={{ perspective: '1000px' }}
+          onClick={() => {
+            setSelectedIndex(0);
+          }}
+        >
+          {/* Stack effect images (shadows/depth) */}
+          <div className="absolute inset-0 bg-white dark:bg-[#222] rounded-2xl transform rotate-[8deg] translate-x-8 md:translate-x-12 translate-y-4 scale-90 shadow-2xl transition-all duration-700 group-hover:rotate-[15deg] group-hover:translate-x-16 group-hover:translate-y-6 overflow-hidden border border-black/10 dark:border-white/10 opacity-60">
+             {works[2] && <img src={works[2].img} className="w-full h-full object-cover blur-[2px] grayscale-[30%]" alt="bg" />}
+             <div className="absolute inset-0 bg-black/30"></div>
+          </div>
+          
+          <div className="absolute inset-0 bg-gray-100 dark:bg-[#1a1a1a] rounded-2xl transform -rotate-[6deg] -translate-x-6 md:-translate-x-10 translate-y-2 scale-95 shadow-2xl transition-all duration-700 group-hover:-rotate-[12deg] group-hover:-translate-x-14 group-hover:translate-y-4 overflow-hidden border border-black/10 dark:border-white/10 opacity-80">
+             {works[1] && <img src={works[1].img} className="w-full h-full object-cover blur-[1px] grayscale-[20%]" alt="bg" />}
+             <div className="absolute inset-0 bg-black/20"></div>
+          </div>
+
+          {/* Main Cover */}
+          <div className="absolute inset-0 bg-white dark:bg-[#111] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-700 group-hover:-translate-y-4 group-hover:scale-[1.02] overflow-hidden border border-black/5 dark:border-white/10 z-10 flex flex-col">
+            {works[0] && (
+              <img 
+                src={works[0].img} 
+                alt="Main Album"
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 md:p-8">
+              <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center text-center">
+                <div className="flex justify-center mb-4">
+                  <span className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-amber-500 text-black shadow-[0_0_20px_rgba(255,138,0,0.5)] animate-pulse">
+                    <Camera className="w-6 h-6 md:w-8 md:h-8" />
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 drop-shadow-md">{language === 'ar' ? 'ألبوم الأعمال' : 'Our Portfolio'}</h3>
+                <p className="text-white/80 text-sm md:text-base font-bold mb-4">{works.length} {language === 'ar' ? 'صورة ومقطع مرئي' : 'Photos & Videos'}</p>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity delay-100 uppercase tracking-wider">
+                   {language === 'ar' ? 'انقر لاستعراض الألبوم' : 'Click to Browse Album'}
+                   <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {selectedWork && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedIndex(null)}
+            className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-12"
+          >
+            <motion.button 
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              className="absolute top-8 rtl:left-8 ltr:right-8 text-white hover:text-amber-500 z-[210]"
+            >
+              <X className="w-8 h-8" />
+            </motion.button>
+            
+            {/* Prev Button */}
+            {selectedIndex !== null && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1); }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-amber-500 text-white flex items-center justify-center rounded-full backdrop-blur-md transition-colors z-[210] hidden md:flex"
+              >
+                <ArrowLeft className="w-6 h-6 ltr:rotate-0 rtl:rotate-180" />
+              </button>
+            )}
+
+            {/* Next Button */}
+            {selectedIndex !== null && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0); }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-amber-500 text-white flex items-center justify-center rounded-full backdrop-blur-md transition-colors z-[210] hidden md:flex"
+              >
+                <ArrowLeft className="w-6 h-6 ltr:rotate-180 rtl:rotate-0" />
+              </button>
+            )}
+
+            <motion.div 
+              key={selectedWork.id}
+              initial={{ scale: 0.9, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: -50, opacity: 0 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipe = offset.x;
+                const isRtl = language === 'ar';
+                if (swipe < -50 && selectedIndex !== null) {
+                  if (isRtl) setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
+                  else setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
+                } else if (swipe > 50 && selectedIndex !== null) {
+                  if (isRtl) setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
+                  else setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-5xl aspect-video bg-[#111] rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing"
+            >
+              {selectedWork.videoUrl ? (
+                isYoutube(selectedWork.videoUrl) ? (
+                  <iframe 
+                    src={getYoutubeEmbedUrl(selectedWork.videoUrl, true)}
+                    className="w-full h-full pointer-events-auto"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <video 
+                    src={selectedWork.videoUrl} 
+                    autoPlay 
+                    controls 
+                    playsInline
+                    poster={selectedWork.img}
+                    className="w-full h-full object-contain bg-black pointer-events-auto" 
+                  />
+                )
+              ) : (
+                <img src={selectedWork.img} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title} />
+              )}
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none">
+                <div className="transform translate-y-0">
+                  {selectedWork.category && (
+                    <span className="inline-block px-3 py-1.5 bg-amber-500 text-black text-xs font-black uppercase tracking-wider rounded-full mb-3 shadow-[0_0_15px_rgba(255,138,0,0.4)]">
+                      {getCategoryTranslation(selectedWork.category)}
+                    </span>
+                  )}
+                  <h3 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{selectedWork.title}</h3>
+                  <div className="text-white/60 text-sm mt-2 font-medium">
+                    {selectedIndex + 1} / {filteredWorks.length}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </SectionWrapper>
+  );
+};
+
+const FAQ = () => {
+  const { t, language } = useLanguage();
+  
+  const faqs = [
+    { q: t('faq.q1'), a: t('faq.a1') },
+    { q: t('faq.q2'), a: t('faq.a2') },
+    { q: t('faq.q3'), a: t('faq.a3') },
+    { q: t('faq.q4'), a: t('faq.a4') },
+    { q: t('faq.q5'), a: t('faq.a5') },
+    { q: t('faq.q6'), a: t('faq.a6') },
+    { q: t('faq.q7'), a: t('faq.a7') },
+    { q: t('faq.q8'), a: t('faq.a8') },
+  ];
+/*, a: "نحن نغطي جميع مناطق المملكة العربية السعودية، ولدينا فرق جاهزة للتنقل لأي مدينة لتوثيق فعاليتكم." },
+    { q: "كم يستغرق تسليم العمل النهائي؟", a: "يعتمد ذلك على حجم الفعالية، ولكن عادة ما يتم تسليم الصور خلال 48 ساعة، والفيديو المونتاج خلال 5-7 أيام عمل." },
+    { q: "هل توفرون خدمة البث المباشر؟", a: "نعم، نوفر خدمات البث المباشر باحترافية عالية لمنصات التواصل الاجتماعي أو المواقع الخاصة بجودة 4K." },
+*/
+
+  return (
+    <SectionWrapper id="faq" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.q,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.a
+          }
+        }))
+      })}} />
+      <div className="text-center mb-16">
+        <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 title-accent-center heading-gradient truncate w-full max-w-full block">{t("nav.faq")}</h2>
+        <p className="text-black/50 dark:text-white/50 max-w-[70ch] mx-auto text-[16px] md:text-[18px] font-normal">{t('faq.subtitle')}</p>
+      </div>
+      <div className="max-w-3xl mx-auto space-y-3 px-4">
+        {faqs.map((faq, i) => (
+          <details key={i} className="group glass-card overflow-hidden transition-all duration-500 open:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-amber-500/30 rounded-xl">
+            <summary className="flex items-center justify-between py-3 px-4 sm:px-6 cursor-pointer list-none">
+              <span className="text-sm md:text-base font-bold whitespace-nowrap overflow-hidden overflow-ellipsis rtl:ml-4 ltr:mr-4">{faq.q}</span>
+              <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center flex-shrink-0 group-open:bg-amber-500 group-open:text-black transition-all duration-500">
+                <ChevronLeft className="w-4 h-4 transition-transform duration-500 group-open:-rotate-90" />
+              </div>
+            </summary>
+            <div className="px-4 sm:px-6 pb-4 text-black/80 dark:text-white/60 text-xs sm:text-sm leading-relaxed font-medium border-t border-black/5 dark:border-white/5 pt-3">
+              <motion.div
+                initial={{ opacity: 0, y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {faq.a}
+              </motion.div>
+            </div>
+          </details>
+        ))}
+      </div>
+    </SectionWrapper>
+  );
+};
+
+
+
+const Process = () => {
+  const { t, language } = useLanguage();
+  
+  const steps = [
+    { num: "01", title: t('process.step1.title'), desc: t('process.step1.desc') },
+    { num: "02", title: t('process.step2.title'), desc: t('process.step2.desc') },
+    { num: "03", title: t('process.step3.title'), desc: t('process.step3.desc') },
+    { num: "04", title: t('process.step4.title'), desc: t('process.step4.desc') }
+  ];
+/*
+    { num: "01", title: "الاستشارة", desc: "فهم احتياجاتكم" },
+    { num: "02", title: "التخطيط", desc: "تجهيز المعدات" },
+    { num: "03", title: "التصوير", desc: "تغطية الحدث" },
+*/
+
+  return (
+    <SectionWrapper id="process" className="bg-gray-50 dark:bg-[#050505] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
+      <div className="text-center mb-16 md:mb-20">
+        <ScrollReveal>
+          <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 md:mb-8 title-accent-center heading-gradient truncate w-full max-w-full block">{t("process.title")}</h2>
+          <p className="text-black/50 dark:text-white/50 max-w-[70ch] mx-auto text-base md:text-[18px]">{t('process.stepsDesc')}</p>
+        </ScrollReveal>
+      </div>
+      <div className="relative max-w-5xl mx-auto px-4">
+        {/* Connecting line background */}
+        <div className="absolute top-[28px] md:top-[48px] left-[10%] right-[10%] h-[2px] bg-black/5 dark:bg-white/5 z-0"></div>
+        {/* Animated connecting line */}
+        <motion.div 
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute top-[28px] md:top-[48px] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-amber-500 to-orange-600 rtl:origin-right ltr:origin-left z-0"
+        ></motion.div>
+        
+        <div className="grid grid-cols-4 gap-2 md:gap-8 relative z-10">
+          {steps.map((step, i) => (
+            <ScrollReveal key={i} delay={i * 0.3} className="flex flex-col items-center text-center group">
+              <motion.div 
+                whileHover={{ scale: 1.1 }}
+                className="w-14 h-14 md:w-24 md:h-24 rounded-full bg-white dark:bg-[#111] border-2 border-amber-500 flex items-center justify-center text-lg md:text-3xl font-black text-amber-500 transition-all duration-500 mb-4 shadow-[0_0_15px_rgba(255,138,0,0.2)] group-hover:shadow-[0_0_30px_rgba(255,138,0,0.4)] relative bg-white/90 backdrop-blur-sm"
+              >
+                {step.num}
+              </motion.div>
+              <h3 className="text-xs sm:text-sm md:text-xl font-bold mb-1 md:mb-3 text-black dark:text-white leading-tight">{step.title}</h3>
+              <p className="text-[10px] sm:text-xs md:text-base text-black/60 dark:text-white/60 hidden sm:block">{step.desc}</p>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+};
+
+
+
+const Partners = ({ partners = [] }: { partners?: Partner[] }) => {
+  const { t, language } = useLanguage();
+  if (!partners || partners.length === 0) return null;
+
+  return (
+    <SectionWrapper id="partners" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-16 overflow-hidden border-b border-black/5 dark:border-white/5">
+      <div className="max-w-7xl mx-auto px-6 mb-12">
+        <ScrollReveal>
+          <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold title-accent-center heading-gradient mb-4 truncate w-full max-w-full block text-black dark:text-white">{t("partners.title")}</h2>
+          <p className="text-center text-black/50 dark:text-white/50">{t('partners.trustDesc')}</p>
+        </ScrollReveal>
+      </div>
+      <div className="relative w-full overflow-hidden flex bg-transparent py-12 group" dir="ltr">
+        {/* Animated gradient fade at the edges for smoothness */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-r from-white dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-l from-white dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
+        
+        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] py-4">
+          {[...partners, ...partners, ...partners].map((p, index) => (
+            <div 
+              key={index} 
+              className="group/card relative mx-3 sm:mx-6 w-32 sm:w-64 h-20 sm:h-36 rounded-2xl flex items-center justify-center transition-all duration-500 cursor-pointer select-none bg-white dark:bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(255,138,0,0.15)] hover:-translate-y-2 overflow-hidden"
+            >
+              {/* 3D Border Effects */}
+              <div className="absolute inset-0 rounded-2xl border-t border-l border-white/80 dark:border-white/10 pointer-events-none transition-colors duration-500 group-hover/card:border-amber-500/30"></div>
+              <div className="absolute inset-0 rounded-2xl border-b-2 border-r-2 border-black/5 dark:border-black/40 pointer-events-none transition-colors duration-500 group-hover/card:border-amber-500/20"></div>
+              
+              {/* Background Lights for dark mode */}
+              <div className="absolute inset-0 opacity-0 dark:opacity-100 pointer-events-none transition-all duration-500 overflow-hidden rounded-2xl">
+                <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-amber-500/10 blur-2xl transform group-hover/card:scale-150 transition-transform duration-700"></div>
+                <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-blue-500/10 blur-2xl transform group-hover/card:scale-150 transition-transform duration-700"></div>
+              </div>
+              
+              <img 
+                src={p.logo} 
+                alt={p.name} 
+                className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover/card:scale-110" 
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+};
+
+
+
+const SequentialTypewriter = ({
+  parts,
+  speed = 50,
+  initialDelay = 0,
+  emoji = ""
+}: {
+  parts: { text: string; className?: string; breakBefore?: boolean }[];
+  speed?: number;
+  initialDelay?: number;
+  emoji?: string;
+}) => {
+  const [displayedChars, setDisplayedChars] = useState<number[]>(parts.map(() => 0));
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    let timeout: NodeJS.Timeout;
+
+    // Reset state
+    setDisplayedChars(parts.map(() => 0));
+    setIsComplete(false);
+    
+    timeout = setTimeout(() => {
+      let partIdx = 0;
+      let charIdx = 0;
+      
+      const typeNextChar = () => {
+        if (!isMounted) return;
+
+        if (partIdx >= parts.length) {
+          setIsComplete(true);
+          return;
+        }
+        
+        const currentText = parts[partIdx].text;
+        
+        if (charIdx < currentText.length) {
+          setDisplayedChars(prev => {
+            const next = [...prev];
+            next[partIdx] = charIdx + 1;
+            return next;
+          });
+          charIdx++;
+          setTimeout(typeNextChar, speed);
+        } else {
+          partIdx++;
+          charIdx = 0;
+          setTimeout(typeNextChar, speed);
+        }
+      };
+      
+      typeNextChar();
+      
+    }, initialDelay);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [speed, initialDelay]); // Intentionally omitting 'parts' to avoid re-triggering if object ref changes, assuming static text
+
+  return (
+    <>
+      {parts.map((part, idx) => (
+        <React.Fragment key={idx}>
+          {part.breakBefore && <br />}
+          <span className={part.className}>
+            {part.text.substring(0, displayedChars[idx])}
+          </span>
+        </React.Fragment>
+      ))}
+      {!isComplete && <span className="inline-block w-[3px] h-[1em] bg-amber-500 mx-1 align-middle animate-pulse"></span>}
+      {isComplete && emoji && <span className="mx-2 inline-block animate-in fade-in zoom-in duration-500">{emoji}</span>}
+    </>
+  );
+};
+
+const TypewriterText = ({ text, isHovered }: { text: string, isHovered: boolean }) => {
+  const [displayedText, setDisplayedText] = useState(text);
+  
+  useEffect(() => {
+    if (isHovered) {
+      setDisplayedText('');
+      let i = 0;
+      const interval = setInterval(() => {
+        setDisplayedText(text.substring(0, i + 1));
+        i++;
+        if (i >= text.length) clearInterval(interval);
+      }, 30);
+      return () => clearInterval(interval);
+    } else {
+      setDisplayedText(text);
+    }
+  }, [isHovered, text]);
+
+  return <span>{displayedText}{isHovered && displayedText.length < text.length && <span className="animate-pulse">|</span>}</span>;
+};
+
+const TestimonialCard = ({ testimonial }: { testimonial: any, key?: React.Key | number }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <div 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="glass-card p-3 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl w-full h-full relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:bg-black/5 dark:hover:bg-white/10 hover:border-amber-500/30 flex flex-col"
+    >
+      <Quote className="w-8 h-8 text-amber-500/10 absolute top-4 rtl:left-4 ltr:right-4" />
+      <div className="flex gap-1 mb-3 md:mb-4 text-amber-500">
+        {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
+      </div>
+      <p className="text-black/80 dark:text-white/80 leading-tight sm:leading-relaxed text-[10px] sm:text-xs md:text-sm mb-4 md:mb-6 flex-1">
+        <TypewriterText text={testimonial.text} isHovered={isHovered} />
+      </p>
+      <div className="flex items-center gap-2 sm:gap-3 mt-auto">
+        <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-[#FF8A00] to-[#FFC300] p-[2px] flex-shrink-0">
+          <div className="w-full h-full bg-white dark:bg-[#111] rounded-full flex items-center justify-center font-bold text-[10px] md:text-base text-black dark:text-white">
+            {testimonial.name.charAt(0)}
+          </div>
+        </div>
+        <div className="overflow-hidden">
+          <h4 className="font-bold text-black dark:text-white text-[10px] sm:text-xs md:text-sm truncate">{testimonial.name}</h4>
+          <p className="text-black/50 dark:text-white/50 text-[8px] sm:text-[10px] md:text-xs truncate">{testimonial.role}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
+const Testimonials = () => {
+  const { t, language } = useLanguage();
+  
+  const testimonials = [
+    { name: t('testimonial.1.name'), role: t('testimonial.1.role'), text: t('testimonial.1.text') },
+    { name: t('testimonial.2.name'), role: t('testimonial.2.role'), text: t('testimonial.2.text') },
+    { name: t('testimonial.3.name'), role: t('testimonial.3.role'), text: t('testimonial.3.text') },
+    { name: t('testimonial.4.name'), role: t('testimonial.4.role'), text: t('testimonial.4.text') },
+    { name: t('testimonial.5.name'), role: t('testimonial.5.role'), text: t('testimonial.5.text') }
+  ];
+/*
+    { name: "أحمد محمد", role: "مدير فعاليات", text: "تجربة رائعة مع فريق EventLive. الاحترافية في التعامل وجودة التصوير كانت تفوق التوقعات. شكراً لكم على توثيق فعاليتنا بأجمل صورة." },
+    { name: "سارة العتيبي", role: "منظمة مؤتمرات", text: "فريق مبدع ومحترف جداً. التغطية كانت شاملة لكل تفاصيل المؤتمر، والمونتاج النهائي كان مذهلاً." },
+    { name: "عبدالله السالم", role: "صاحب شركة", text: "من أفضل الشركات اللي تعاملنا معاها في مجال التغطية الإعلامية. التزام بالوقت وجودة في المخرجات لا يُعلى عليها." },
+    { name: "نورة الخالد", role: "مديرة علاقات عامة", text: "خدماتهم في البث المباشر كانت استثنائية. الجودة عالية ولم نواجه أي مشاكل تقنية خلال الحدث بأكمله." },
+*/
+
+  return (
+    <SectionWrapper id="testimonials" className="bg-gray-50 dark:bg-[#050505] py-12 md:py-16 overflow-hidden relative border-b border-black/5 dark:border-white/5">
+      <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
+        <ScrollReveal>
+          <AnimatedTitle text={t("testimonials.title")} className="text-2xl sm:text-3xl md:text-[40px] font-semibold title-accent-center heading-gradient mb-4 truncate w-full max-w-full" />
+          <p className="text-black/50 dark:text-white/50 text-lg mx-auto text-center">{t('testimonials.subtitle')}</p>
+        </ScrollReveal>
+      </div>
+
+      <div className="relative w-full overflow-hidden flex bg-transparent py-4 group" dir="ltr">
+        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] py-2">
+          {[...testimonials, ...testimonials, ...testimonials].map((t, index) => (
+            <div key={index} className="mx-2 sm:mx-4 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[35vw]" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+              <TestimonialCard testimonial={t} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+};
+
+
+
+const Contact = () => {
+  const { t, language } = useLanguage();
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = localStorage.getItem('contactFormDraft');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return { name: '', email: '', phone: '05', clientType: 'أفراد', serviceRequested: 'تصوير فيديو', details: '' };
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('contactFormDraft', JSON.stringify(formData));
+  }, [formData]);
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = 'الاسم مطلوب (حقل إلزامي)';
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'البريد الإلكتروني غير صالح';
+    }
+    if (!/^05\d{8}$/.test(formData.phone)) {
+      newErrors.phone = 'رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام';
+    }
+    return newErrors;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  const startListening = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert('متصفحك لا يدعم خاصية الإملاء الصوتي. يرجى استخدام متصفح حديث مثل Chrome.');
+      return;
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'ar-SA';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (event: any) => {
+      const speechResult = event.results[0][0].transcript;
+      setFormData(prev => ({ ...prev, details: prev.details ? prev.details + ' ' + speechResult : speechResult }));
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+
+    recognition.start();
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors = validate();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setIsSubmitting(true);
+    
+    setTimeout(() => {
+      setIsSubmitting(false);
+      const message = `*طلب خدمة من الموقع*\n\n` +
+        `*الاسم:* ${formData.name}\n` +
+        (formData.email ? `*البريد الإلكتروني:* ${formData.email}\n` : '') +
+        `*رقم الجوال:* ${formData.phone}\n` +
+        `*نوع العميل:* ${formData.clientType}\n` +
+        `*الخدمة المطلوبة:* ${formData.serviceRequested}\n` +
+        `*الرسالة أو التفاصيل:* ${formData.details}`;
+
+      const waUrl = `https://wa.me/966536753679?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, '_blank');
+      
+      setFormData({ name: '', email: '', phone: '05', clientType: 'أفراد', serviceRequested: 'تصوير فيديو', details: '' });
+      localStorage.removeItem('contactFormDraft');
+    }, 500);
+  };
+
+  return (
+    <SectionWrapper id="contact" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <ScrollReveal>
+            <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 md:mb-8 title-accent heading-gradient truncate w-full max-w-full block">{t("contact.title")}</h2>
+            <p className="text-black/60 dark:text-white/60 mb-12 text-base md:text-lg">{t('contact.formDesc')}</p>
+            
+            <div className="space-y-8">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                  <Phone className="w-6 h-6 text-amber-500" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-black dark:text-white mb-1">{t('contact.phone')}</h4>
+                  <p className="text-black/60 dark:text-white/60" dir="ltr">053 675 3679</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-6 h-6 text-amber-500" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-black dark:text-white mb-1">{t("quote.email")}</h4>
+                  <p className="text-black/60 dark:text-white/60">info@eventliveksa.com</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-6 h-6 text-amber-500" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-black dark:text-white mb-1">{t('contact.location')}</h4>
+                  <p className="text-black/60 dark:text-white/60">{t('contact.locationDesc')}</p>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+          
+          <ScrollReveal delay={0.2}>
+            <form onSubmit={handleSubmit} className="glass-card p-8 rounded-3xl space-y-6 relative overflow-hidden group/form">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2">{t('contact.nameLabel')}</label>
+                  <input name="name" dir="auto" placeholder={t("contact.namePlaceholder")} value={formData.name} onChange={handleChange} className={`w-full bg-black/5 dark:bg-white/5 border ${errors.name ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white focus:bg-white dark:focus:bg-black/40 shadow-sm`} />
+                  {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2">{t('contact.emailLabel')}</label>
+                  <input name="email" placeholder="example@domain.com" value={formData.email} onChange={handleChange} type="email" className={`w-full bg-black/5 dark:bg-white/5 border ${errors.email ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white focus:bg-white dark:focus:bg-black/40 shadow-sm text-start`} dir="auto" />
+                  {errors.email && <p className="text-red-500 text-xs mt-1 text-start">{errors.email}</p>}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2">{t('contact.phoneLabel')}</label>
+                <input name="phone" placeholder="05XXXXXXXX" value={formData.phone} onChange={handleChange} type="tel" className={`w-full bg-black/5 dark:bg-white/5 border ${errors.phone ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white focus:bg-white dark:focus:bg-black/40 shadow-sm text-start`} dir="auto" />
+                {errors.phone && <p className="text-red-500 text-xs mt-1 text-start">{errors.phone}</p>}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2">{t("quote.clientType")}</label>
+                  <select name="clientType" value={formData.clientType} onChange={handleChange} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white focus:bg-white dark:focus:bg-black/40 shadow-sm appearance-none">
+                    <option value={t("contact.clientIndividuals")} className="text-black">{t('contact.clientIndividuals')}</option>
+                    <option value={t("contact.clientCompanies")} className="text-black">{t('contact.clientCompanies')}</option>
+                    <option value={t("contact.clientGov")} className="text-black">{t('contact.clientGov')}</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2">{t('contact.serviceLabel')}</label>
+                  <select name="serviceRequested" value={formData.serviceRequested} onChange={handleChange} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white focus:bg-white dark:focus:bg-black/40 shadow-sm appearance-none">
+                    <option value={t("contact.serviceVideo")} className="text-black">{t('contact.serviceVideo')}</option>
+                    <option value={t("contact.servicePhoto")} className="text-black">{t('contact.servicePhoto')}</option>
+                    <option value={t("contact.serviceLive")} className="text-black">{t('contact.serviceLive')}</option>
+                    <option value={t("contact.serviceCoverage")} className="text-black">{t('contact.serviceCoverage')}</option>
+                    <option value={t("contact.serviceOther")} className="text-black">{t('contact.serviceOther')}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="relative">
+                <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2 flex items-center justify-between">
+                  <span>{t('contact.detailsLabel')}</span>
+                  <button type="button" onClick={startListening} className={`text-xs flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${isListening ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-black/5 dark:bg-white/10 text-black/60 dark:text-white/60 hover:text-amber-500'}`} title={t("contact.dictationHint")}>
+                    <Mic className="w-3 h-3" />
+                    {isListening ? t("contact.dictationListening") : t("contact.dictationBtn")}
+                  </button>
+                </label>
+                <textarea dir="auto" name="details" placeholder={t("contact.detailsPlaceholder")} value={formData.details} onChange={handleChange} rows={4} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors resize-none text-black dark:text-white focus:bg-white dark:focus:bg-black/40 shadow-sm"></textarea>
+              </div>
+
+              <button disabled={isSubmitting} type="submit" className="w-full py-4 bg-amber-500 text-black font-bold text-lg rounded-xl hover:bg-amber-400 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(255,138,0,0.3)]">
+                {isSubmitting ? <span className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full"></span> : t("contact.submitBtn")}
+              </button>
+            </form>
+          </ScrollReveal>
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+};
+
+
+
+const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
+  const { t, language } = useLanguage();
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  const toggleSection = (section: string) => {
+    setOpenSection(openSection === section ? null : section);
+  };
+  
+  return (
+    <footer className="relative bg-white/50 dark:bg-[#020202]/80 backdrop-blur-3xl border-t border-black/5 dark:border-white/5 pt-12 md:pt-20 pb-10 overflow-hidden">
+      {/* Dynamic Backgrounds */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 -left-1/4 w-1/2 h-full bg-amber-500/20 blur-[120px] rounded-full mix-blend-screen animate-bg-pan" style={{ animationDuration: '15s' }}></div>
+        <div className="absolute top-0 -right-1/4 w-1/2 h-full bg-orange-600/20 blur-[120px] rounded-full mix-blend-screen animate-bg-pan" style={{ animationDuration: '20s', animationDirection: 'reverse' }}></div>
+        <div className="absolute -bottom-1/2 left-1/4 w-1/2 h-full bg-yellow-500/10 blur-[100px] rounded-full mix-blend-screen animate-bg-pan" style={{ animationDuration: '25s' }}></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12 mb-16">
+          <div className="mb-4 md:mb-0">
+            <a href="#home" className="flex items-center gap-2 mb-6">
+              <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+            </a>
+            <p className="text-black/60 dark:text-white/60 mb-6 leading-relaxed">
+              {t("footer.companyDesc")}
+            </p>
+          </div>
+          
+          <div className="border-b border-black/10 dark:border-white/10 md:border-none pb-4 md:pb-0">
+            <button 
+              onClick={() => toggleSection('quickLinks')}
+              className="flex justify-between items-center w-full md:cursor-auto"
+            >
+              <h4 className="font-bold text-lg text-black dark:text-white md:mb-6">{t("footer.quickLinks")}</h4>
+              <ChevronDown className={`w-5 h-5 md:hidden transition-transform duration-300 ${openSection === 'quickLinks' ? 'rotate-180' : ''}`} />
+            </button>
+            <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === 'quickLinks' ? 'max-h-96' : 'max-h-0 md:max-h-full'}`}>
+              <HoverLinkGroup id={`footer-group-${Math.random()}`} links={[
+                { label: t("nav.home"), href: "#home" },
+                { label: t("nav.services"), href: "#services" },
+                { label: t("nav.portfolio"), href: "#portfolio" },
+                { label: t("nav.faq"), href: "#faq" }
+              ]} />
+            </div>
+          </div>
+          
+          <div className="border-b border-black/10 dark:border-white/10 md:border-none pb-4 md:pb-0">
+            <button 
+              onClick={() => toggleSection('services')}
+              className="flex justify-between items-center w-full md:cursor-auto"
+            >
+              <h4 className="font-bold text-lg text-black dark:text-white md:mb-6">{t("nav.services")}</h4>
+              <ChevronDown className={`w-5 h-5 md:hidden transition-transform duration-300 ${openSection === 'services' ? 'rotate-180' : ''}`} />
+            </button>
+            <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === 'services' ? 'max-h-96' : 'max-h-0 md:max-h-full'}`}>
+              <HoverLinkGroup id={`footer-group-${Math.random()}`} links={[
+                { label: t("footer.service1"), href: "#" },
+                { label: t("footer.service2"), href: "#" },
+                { label: t("footer.service3"), href: "#" },
+                { label: t("footer.service4"), href: "#" }
+              ]} />
+            </div>
+          </div>
+          
+          <div className="pb-4 md:pb-0">
+            <button 
+              onClick={() => toggleSection('contact')}
+              className="flex justify-between items-center w-full md:cursor-auto"
+            >
+              <h4 className="font-bold text-lg text-black dark:text-white md:mb-6">{t("contact.title")}</h4>
+              <ChevronDown className={`w-5 h-5 md:hidden transition-transform duration-300 ${openSection === 'contact' ? 'rotate-180' : ''}`} />
+            </button>
+            
+            <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === 'contact' ? 'max-h-96' : 'max-h-0 md:max-h-full'}`}>
+              <div className="flex flex-col gap-4 mb-6">
+                <a href="tel:0536753679" className="flex items-center gap-3 text-black/60 dark:text-white/60 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
+                  <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-amber-500">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium text-sm" dir="ltr">0536753679</span>
+                </a>
+                <a href="mailto:info@eventliveksa.com" className="flex items-center gap-3 text-black/60 dark:text-white/60 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
+                  <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-amber-500">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium text-sm" dir="ltr">info@eventliveksa.com</span>
+                </a>
+              </div>
+
+            <div className="flex gap-3 flex-wrap">
+              {socialLinks.map((link, i) => {
+                if (!link.url || link.url === '#') return null;
+                const IconMapLocal: Record<string, any> = {
+                  twitter: XIcon,
+                  instagram: Instagram,
+                  linkedin: Linkedin,
+                  youtube: Youtube,
+                  facebook: Facebook,
+                  tiktok: Music2,
+                  snapchat: Ghost,
+                  website: Globe
+                };
+                const ColorMapLocal: Record<string, string> = {
+                  twitter: 'bg-black text-white dark:bg-white dark:text-black hover:opacity-80',
+                  instagram: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white hover:opacity-80',
+                  linkedin: 'bg-[#0077b5] text-white hover:opacity-80',
+                  snapchat: 'bg-[#FFFC00] text-black hover:opacity-80',
+                  tiktok: 'bg-black text-white dark:bg-white dark:text-black hover:opacity-80',
+                };
+                const Icon = IconMapLocal[link.platform] || Globe;
+                const colorClass = ColorMapLocal[link.platform] || 'bg-amber-500 text-black hover:opacity-80';
+
+                return (
+                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className={`relative z-10 pointer-events-auto w-10 h-10 rounded-full flex items-center justify-center transition-opacity border border-transparent ${colorClass}`}>
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
+            </div>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-black/5 dark:border-white/5 pt-8 flex flex-col items-center gap-4 text-sm text-black/40 dark:text-white/40">
+          <div className="flex flex-col md:flex-row w-full items-center justify-between gap-4">
+            <p>© {new Date().getFullYear()} EventLive KSA. {t("footer.rights")}</p>
+            <div className="flex gap-4">
+              <a href="#" className="hover:text-amber-500 transition-colors">{t("footer.terms")}</a>
+              <a href="#" className="hover:text-amber-500 transition-colors">{t("footer.privacy")}</a>
+            </div>
+          </div>
+          <div className="mt-4 pb-4 w-full flex justify-center border-t border-black/5 dark:border-white/5 pt-6">
+             <p className="text-xs text-black/40 dark:text-white/40 flex items-center gap-1">
+                Powered by <a href="https://www.nmolabs.com" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-amber-500 transition-colors">NmoLabs</a>
+             </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+
+
+const AdminPage = ({ data, onSave, onClose }: { data: AppData, onSave: (data: AppData) => void, onClose: () => void }) => {
+  const [localData, setLocalData] = useState<AppData>(data);
+  const [activeTab, setActiveTab] = useState('services');
+
+  const handleUpdateServiceIcon = (id: string, iconName: string) => {
+    setLocalData({
+      ...localData,
+      services: localData.services.map(s => s.id === id ? { ...s, iconName } : s)
+    });
+  };
+
+  const handleUpdateServiceMedia = (id: string, type: 'icon' | 'image' | 'video' | 'url', value: string) => {
+    setLocalData({
+      ...localData,
+      services: localData.services.map(s => s.id === id ? { ...s, mediaType: type, mediaValue: value } : s)
+    });
+  };
+
+  const handleUpdateSocial = (platform: string, url: string) => {
+    setLocalData({
+      ...localData,
+      socialLinks: localData.socialLinks.map(s => s.platform === platform ? { ...s, url } : s)
+    });
+  };
+
+  const handleAddWork = () => {
+    const newWork: Work = {
+      id: Date.now().toString(),
+      title: 'عمل جديد',
+      img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800'
+    };
+    setLocalData({ ...localData, works: [newWork, ...localData.works] });
+  };
+
+  const handleRemoveWork = (id: string) => {
+    setLocalData({ ...localData, works: localData.works.filter(w => w.id !== id) });
+  };
+
+  const handleUpdateWork = (id: string, field: keyof Work, value: string) => {
+    setLocalData({
+      ...localData,
+      works: localData.works.map(w => w.id === id ? { ...w, [field]: value } : w)
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-[500] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-[#111] rounded-2xl w-full max-w-4xl h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-black/10 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-gray-50 dark:bg-[#0a0a0a]">
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-black dark:text-white"><Settings className="w-6 h-6" /> لوحة التحكم</h2>
+          <div className="flex gap-4">
+            <button onClick={() => onSave(localData)} className="px-6 py-2 bg-amber-500 text-black font-bold rounded-lg hover:bg-amber-400 transition-colors">حفظ التغييرات</button>
+            <button onClick={onClose} className="p-2 text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 rounded-lg"><X className="w-5 h-5" /></button>
+          </div>
+        </div>
+        
+        <div className="flex flex-1 overflow-hidden">
+          <div className="w-64 bg-gray-50 dark:bg-[#0a0a0a] border-l border-black/10 dark:border-white/10 p-4 flex flex-col gap-2 overflow-y-auto">
+            {['services', 'portfolio', 'social', 'hero', 'partners'].map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)} className={`text-start px-4 py-3 rounded-lg font-bold transition-colors ${activeTab === tab ? 'bg-amber-500 text-black' : 'text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5'}`}>
+                {tab === 'services' && 'الخدمات'}
+                {tab === 'portfolio' && 'الأعمال'}
+                {tab === 'social' && 'التواصل الاجتماعي'}
+                {tab === 'hero' && 'الرئيسية'}
+                {tab === 'partners' && 'شركاء النجاح'}
+              </button>
+            ))}
+          </div>
+          
+          <div className="flex-1 p-6 overflow-y-auto bg-white dark:bg-[#111]">
+            {activeTab === 'hero' && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold mb-4 text-black dark:text-white">إعدادات القسم الرئيسي</h3>
+                <div>
+                  <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">رابط فيديو الخلفية (YouTube أو رابط مباشر MP4/WebM)</label>
+                  <input type="text" value={localData.heroVideoUrl || ''} onChange={(e) => setLocalData({...localData, heroVideoUrl: e.target.value})} className="w-full bg-black/5 dark:bg-[#222] border border-black/10 dark:border-white/10 rounded-lg px-4 py-3" dir="ltr" placeholder="https://..." />
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'services' && (
+              <div className="space-y-8">
+                {localData.services.map(service => (
+                  <div key={service.id} className="p-6 bg-gray-50 dark:bg-[#222] rounded-xl border border-black/5 dark:border-white/5 space-y-4">
+                    <input dir="auto" type="text" value={service.title} onChange={(e) => setLocalData({...localData, services: localData.services.map(s => s.id === service.id ? {...s, title: e.target.value} : s)})} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2 font-bold text-lg" />
+                    <textarea dir="auto" value={service.desc} onChange={(e) => setLocalData({...localData, services: localData.services.map(s => s.id === service.id ? {...s, desc: e.target.value} : s)})} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2 text-sm" rows={2} />
+                    <input type="text" value={service.cardBgImage || ''} onChange={(e) => setLocalData({...localData, services: localData.services.map(s => s.id === service.id ? {...s, cardBgImage: e.target.value} : s)})} placeholder="رابط صورة خلفية البطاقة كاملة (اختياري)" className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2 text-sm" dir="ltr" />
+                    <div className="flex gap-4">
+                      <select value={service.mediaType || 'icon'} onChange={(e) => handleUpdateServiceMedia(service.id, e.target.value as any, service.mediaValue || '')} className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2 text-sm">
+                        <option value="icon">أيقونة</option>
+                        <option value="image">صورة</option>
+                        <option value="video">فيديو</option>
+                      </select>
+                      {service.mediaType !== 'icon' && (
+                        <input type="text" value={service.mediaValue || ''} onChange={(e) => handleUpdateServiceMedia(service.id, service.mediaType as any, e.target.value)} placeholder={service.mediaType === 'image' ? 'رابط الصورة' : 'رابط الفيديو (يوتيوب أو مباشر)'} className="flex-1 bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2 text-sm" dir="ltr" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'portfolio' && (
+              <div className="space-y-6">
+                <button onClick={handleAddWork} className="w-full py-4 border-2 border-dashed border-amber-500/50 text-amber-500 rounded-xl hover:bg-amber-500/10 transition-colors flex items-center justify-center gap-2 font-bold">
+                  <Plus className="w-5 h-5" /> إضافة عمل جديد
+                </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {localData.works.map(work => (
+                    <div key={work.id} className="p-4 bg-gray-50 dark:bg-[#222] rounded-xl border border-black/5 dark:border-white/5 relative group">
+                      <button onClick={() => handleRemoveWork(work.id)} className="absolute top-2 rtl:left-2 ltr:right-2 p-2 bg-red-500/10 text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <input dir="auto" type="text" value={work.title} onChange={(e) => handleUpdateWork(work.id, 'title', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 mb-2 font-bold" />
+                      <input type="text" value={work.img} onChange={(e) => handleUpdateWork(work.id, 'img', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-sm mb-2" placeholder="رابط الصورة" dir="ltr" />
+                      <input type="text" value={work.videoUrl || ''} onChange={(e) => handleUpdateWork(work.id, 'videoUrl', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-sm" placeholder="رابط الفيديو (يوتيوب)" dir="ltr" />
+                      <input dir="auto" type="text" value={work.category || ''} onChange={(e) => handleUpdateWork(work.id, 'category', e.target.value)} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-sm mt-2" placeholder="التصنيف (مثال: تصوير)" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'social' && (
+              <div className="space-y-4">
+                {localData.socialLinks.map(link => (
+                  <div key={link.platform} className="flex items-center gap-4 bg-gray-50 dark:bg-[#222] p-4 rounded-xl border border-black/5 dark:border-white/5">
+                    <div className="w-24 capitalize font-bold text-black/50 dark:text-white/50">{link.platform}</div>
+                    <input type="text" value={link.url} onChange={(e) => handleUpdateSocial(link.platform, e.target.value)} className="flex-1 bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2" dir="ltr" placeholder="https://..." />
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {activeTab === 'partners' && (
+              <div className="space-y-6">
+                <button onClick={() => setLocalData({...localData, partners: [{id: Date.now().toString(), name: 'شريك جديد', logo: ''}, ...(localData.partners || [])]})} className="w-full py-4 border-2 border-dashed border-amber-500/50 text-amber-500 rounded-xl hover:bg-amber-500/10 transition-colors flex items-center justify-center gap-2 font-bold">
+                  <Plus className="w-5 h-5" /> إضافة شريك جديد
+                </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {(localData.partners || []).map(partner => (
+                    <div key={partner.id} className="p-4 bg-gray-50 dark:bg-[#222] rounded-xl border border-black/5 dark:border-white/5 relative">
+                      <button onClick={() => setLocalData({...localData, partners: localData.partners?.filter(p => p.id !== partner.id)})} className="absolute top-4 rtl:left-4 ltr:right-4 p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20"><X className="w-4 h-4" /></button>
+                      <div className="space-y-4 pt-8">
+                        <div>
+                          <label className="block text-xs font-bold mb-1 opacity-50">اسم الشريك</label>
+                          <input dir="auto" type="text" value={partner.name} onChange={(e) => setLocalData({...localData, partners: localData.partners?.map(p => p.id === partner.id ? {...p, name: e.target.value} : p)})} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-sm" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold mb-1 opacity-50">رابط الشعار (صورة)</label>
+                          <input type="text" value={partner.logo} onChange={(e) => setLocalData({...localData, partners: localData.partners?.map(p => p.id === partner.id ? {...p, logo: e.target.value} : p)})} className="w-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-sm" dir="ltr" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ScrollProgress = () => {
+  const { scrollYProgress } = useScroll();
+  
+  return (
+    <motion.div
+      className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF8A00] to-[#FFC300] z-[200] rtl:origin-left ltr:origin-right"
+      style={{ scaleX: scrollYProgress }}
+    />
+  );
+};
+
+
+
+const QuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  const { t, language } = useLanguage();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    clientType: '',
+    eventType: '',
+    notes: ''
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  if (!isOpen) return null;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("عذراً، متصفحك لا يدعم تحويل الصوت إلى نص.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = language === 'ar' ? 'ar-SA' : 'en-US';
+    recognition.interimResults = true;
+    recognition.continuous = true;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    let startNotes = formData.notes;
+
+    recognition.onresult = (event: any) => {
+      let interimTranscript = '';
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+
+      const separator = startNotes && startNotes.trim().length > 0 ? ' ' : '';
+      const newNotes = startNotes + separator + finalTranscript + interimTranscript;
+      
+      setFormData(prev => ({
+        ...prev,
+        notes: newNotes
+      }));
+
+      if (finalTranscript) {
+        startNotes += separator + finalTranscript;
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error(event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) newErrors.name = t('error.name');
+    if (!formData.email.trim()) {
+      newErrors.email = t('error.email');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = t('error.emailInvalid');
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = t('error.phone');
+    } else if (!/^05\d{8}$/.test(formData.phone)) {
+      newErrors.phone = t('error.phoneInvalid');
+    }
+    
+    if (!formData.clientType) newErrors.clientType = t('error.clientType');
+    if (!formData.eventType) newErrors.eventType = t('error.eventType');
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const message = `*${t("quote.title")} جديد*\nالاسم: ${formData.name}\nالبريد: ${formData.email}\nالهاتف: ${formData.phone}\nنوع العميل: ${formData.clientType}\nنوع الفعالية: ${formData.eventType}\nملاحظات: ${formData.notes}`;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/966536753679?text=${encodedMessage}`, '_blank');
+    onClose();
+  };
+
+  const clientTypes = [{id: 'gov', name: t('client.gov')}, {id: 'company', name: t('client.company')}, {id: 'org', name: t('client.org')}, {id: 'individual', name: t('client.individual')}];
+  const eventTypes = [{id: 'exhibition', name: t('event.exhibition')}, {id: 'festival', name: t('event.festival')}, {id: 'conference', name: t('event.conference')}, {id: 'events', name: t('event.events')}, {id: 'corp', name: t('event.corp')}, {id: 'opening', name: t('event.opening')}, {id: 'national', name: t('event.national')}, {id: 'photography', name: t('event.photography')}, {id: 'realestate', name: t('event.realestate')}, {id: 'ad', name: t('event.ad')}, {id: 'wedding', name: t('event.wedding')}, {id: 'personal', name: t('event.personal')}, {id: 'other', name: t('event.other')}];
+
+  return (
+    <div className="fixed inset-0 z-[300] bg-black/80 flex items-center justify-center p-4" onClick={onClose}>
+      <motion.div 
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 50, scale: 0.9 }}
+        className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-8 w-full max-w-xl shadow-2xl relative overflow-y-auto max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-6 rtl:left-6 ltr:right-6 text-black/50 dark:text-white/50 hover:text-amber-500 transition-colors bg-black/5 dark:bg-white/5 p-2 rounded-full">
+          <X className="w-5 h-5" />
+        </button>
+        <h2 className="text-3xl font-black mb-2 text-black dark:text-white">{t("quote.title")}</h2>
+        <p className="text-black/60 dark:text-white/60 mb-8">{t("quote.subtitle")}</p>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.name")}</label>
+              <input name="name" dir="auto" value={formData.name} onChange={handleChange} type="text" className={`w-full bg-black/5 dark:bg-white/5 border ${errors.name ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`} />
+              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.email")}</label>
+              <input name="email" value={formData.email} onChange={handleChange} type="email" className={`w-full bg-black/5 dark:bg-white/5 border ${errors.email ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`} dir="ltr" />
+              {errors.email && <p className="text-red-500 text-xs mt-1 text-start">{errors.email}</p>}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.phone")}</label>
+            <input name="phone" value={formData.phone} onChange={handleChange} type="tel" placeholder="05xxxxxxxx" className={`w-full bg-black/5 dark:bg-white/5 border ${errors.phone ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`} dir="ltr" />
+            {errors.phone && <p className="text-red-500 text-xs mt-1 text-start">{errors.phone}</p>}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.clientType")}</label>
+              <div className="relative">
+                <select name="clientType" value={formData.clientType} onChange={handleChange} className={`w-full appearance-none bg-black/5 dark:bg-[#222] border ${errors.clientType ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`}>
+                  <option value="" className="text-black/50 dark:text-white/50 bg-white dark:bg-[#222]">{t("quote.selectClientType")}</option>
+                  {clientTypes.map((type, i) => <option key={i} value={type.name} className="bg-white dark:bg-[#222] text-black dark:text-white">{type.name}</option>)}
+                </select>
+                <ChevronDown className="w-5 h-5 absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50 pointer-events-none" />
+              </div>
+              {errors.clientType && <p className="text-red-500 text-xs mt-1">{errors.clientType}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.eventType")}</label>
+              <div className="relative">
+                <select name="eventType" value={formData.eventType} onChange={handleChange} className={`w-full appearance-none bg-black/5 dark:bg-[#222] border ${errors.eventType ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`}>
+                  <option value="" className="text-black/50 dark:text-white/50 bg-white dark:bg-[#222]">{t("quote.selectEventType")}</option>
+                  {eventTypes.map((type, i) => <option key={i} value={type.name} className="bg-white dark:bg-[#222] text-black dark:text-white">{type.name}</option>)}
+                </select>
+                <ChevronDown className="w-5 h-5 absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50 pointer-events-none" />
+              </div>
+              {errors.eventType && <p className="text-red-500 text-xs mt-1">{errors.eventType}</p>}
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-bold text-black/80 dark:text-white/80">{language === 'ar' ? 'ملاحظات إضافية' : 'Additional Notes'}</label>
+              <button 
+                type="button"
+                onClick={toggleListening}
+                className={`p-2 rounded-full flex items-center justify-center transition-colors ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60 hover:text-amber-500 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                title={language === 'ar' ? 'تحدث لإضافة ملاحظات' : 'Speak to add notes'}
+              >
+                <Mic className="w-4 h-4" />
+              </button>
+            </div>
+            <textarea 
+              name="notes" 
+              value={formData.notes} 
+              onChange={handleChange} 
+              rows={3}
+              placeholder={language === 'ar' ? 'اكتب أو تحدث هنا...' : 'Write or speak here...'}
+              className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white resize-none"
+            ></textarea>
+          </div>
+
+          <button type="submit" className="w-full py-4 mt-6 bg-amber-500 text-black font-bold text-lg rounded-xl hover:shadow-[0_0_30px_rgba(255,138,0,0.4)] hover:bg-amber-400 transition-all flex items-center justify-center gap-2">
+            {t("quote.submit")}
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  );
+};
+
+
+const FloatingActionButtons = () => {
+  const { t, language } = useLanguage();
+  return (
+    <div className="fixed bottom-6 rtl:left-6 ltr:right-6 z-[90] flex flex-col gap-4">
+      <a href={`https://wa.me/966536753679?text=${t('contact.whatsappText')}`} target="_blank" rel="noopener noreferrer" className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-[0_4px_20px_rgba(34,197,94,0.4)] opacity-40 hover:opacity-100 hover:scale-110 transition-all duration-300 hover:shadow-[0_4px_25px_rgba(34,197,94,0.6)] group">
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 group-hover:animate-pulse"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+      <a href="tel:0536753679" className="w-14 h-14 bg-amber-500 rounded-full flex items-center justify-center text-white shadow-[0_4px_20px_rgba(255,138,0,0.4)] opacity-40 hover:opacity-100 hover:scale-110 transition-all duration-300 hover:shadow-[0_4px_25px_rgba(255,138,0,0.6)] group">
+        <Phone className="w-7 h-7 group-hover:animate-pulse" />
+      </a>
+    </div>
+  );
+};
+
+
+const CameraFrameOverlay = () => {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds(s => s + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (totalSeconds: number) => {
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[60] p-4 md:p-8 flex flex-col justify-between" dir="ltr">
+      {/* Corner Brackets */}
+      <div className="absolute top-4 left-4 w-12 h-12 md:w-20 md:h-20 border-t-2 border-l-2 border-white/50"></div>
+      <div className="absolute top-4 right-4 w-12 h-12 md:w-20 md:h-20 border-t-2 border-r-2 border-white/50"></div>
+      <div className="absolute bottom-4 left-4 w-12 h-12 md:w-20 md:h-20 border-b-2 border-l-2 border-white/50"></div>
+      <div className="absolute bottom-4 right-4 w-12 h-12 md:w-20 md:h-20 border-b-2 border-r-2 border-white/50"></div>
+
+      {/* Top Bar */}
+      <div className="flex justify-between items-start w-full mt-[120px] md:mt-[140px]">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-3 bg-black/40 backdrop-blur-sm border border-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            <span className="w-3 h-3 md:w-4 md:h-4 bg-red-600 rounded-full animate-pulse shadow-[0_0_15px_rgba(220,38,38,1)]"></span>
+            <span className="text-white text-xs md:text-sm font-black tracking-widest uppercase">REC</span>
+            <span className="text-white/80 text-xs md:text-sm font-mono ml-2 border-l border-white/20 pl-2 md:pl-3">{formatTime(seconds)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/70 text-[10px] md:text-xs font-mono bg-black/20 backdrop-blur-sm px-2 py-1 rounded w-fit">
+            <span>4K 60FPS</span>
+            <span>•</span>
+            <span>RAW</span>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-end gap-2 text-white/80 font-mono text-[10px] md:text-xs bg-black/20 backdrop-blur-sm px-2 py-1 rounded">
+          <div className="flex items-center gap-2"><span>ISO</span> <span className="font-bold text-white">800</span></div>
+          <div className="flex items-center gap-2"><span>F</span> <span className="font-bold text-white">2.8</span></div>
+          <div className="flex items-center gap-2"><span>SHUTTER</span> <span className="font-bold text-white">1/120</span></div>
+          <div className="flex items-center gap-2"><span>AWB</span> <span className="font-bold text-white">5600K</span></div>
+        </div>
+      </div>
+
+      {/* Center Reticle */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center opacity-30">
+        <div className="w-[100px] h-[100px] md:w-[200px] md:h-[200px] border border-white/50 rounded-full relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white/80 rounded-full"></div>
+          <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 border-l border-white/30"></div>
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 border-t border-white/30"></div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="flex justify-between items-end w-full">
+        <div className="flex items-end gap-2 bg-black/20 backdrop-blur-sm px-2 py-1 rounded">
+          <div className="h-2 md:h-3 w-1 bg-green-500"></div>
+          <div className="h-3 md:h-4 w-1 bg-green-500"></div>
+          <div className="h-4 md:h-5 w-1 bg-green-400"></div>
+          <div className="h-5 md:h-6 w-1 bg-yellow-400"></div>
+          <div className="h-4 md:h-5 w-1 bg-white/20"></div>
+          <div className="h-3 md:h-4 w-1 bg-white/20"></div>
+          <div className="h-2 md:h-3 w-1 bg-white/20"></div>
+          <span className="text-white/70 text-[8px] md:text-[10px] font-mono ml-2">CH1</span>
+        </div>
+        <div className="flex items-center gap-4 text-white/70 text-[10px] md:text-xs font-mono bg-black/20 backdrop-blur-sm px-2 py-1 rounded">
+          <span>SD1 [1H 24M]</span>
+          <div className="flex gap-1">
+            <div className="w-4 h-2 border border-white/50 rounded-sm"></div>
+            <div className="w-4 h-2 border border-white/50 rounded-sm bg-white/50"></div>
+          </div>
+          <span>BATT 78%</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+const MapSection = () => {
+  return (
+    <SectionWrapper id="map" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-20 border-b border-black/5 dark:border-white/5">
+      <div className="max-w-7xl mx-auto px-6">
+        <ScrollReveal>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold heading-gradient title-accent-center mb-6">حياكم</h2>
+            <p className="text-black/60 dark:text-white/60 max-w-2xl mx-auto text-lg">نسعد بزيارتكم لنا في مقرنا</p>
+          </div>
+        </ScrollReveal>
+        <ScrollReveal className="delay-100">
+          <div className="relative max-w-5xl mx-auto">
+            {/* 3D Shadow underneath */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/20 to-amber-600/20 blur-xl opacity-50 dark:opacity-30 rounded-[3rem] -z-10"></div>
+            
+            <div className="animated-border-container shadow-[0_20px_50px_rgba(0,0,0,0.2)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+              <div className="animated-border-gradient"></div>
+              <div className="relative bg-white dark:bg-[#111] rounded-[22px] overflow-hidden z-10 h-[400px] md:h-[500px] p-2">
+                <div className="w-full h-full rounded-[16px] overflow-hidden relative">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4242.39251162464!2d46.5761172!3d24.5809918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f0fef903a6473%3A0xa51160831c34a8c0!2z2LTYsdmD2Kkg2KfZitmB2YbYqiDZhNin2YrZgQ!5e1!3m2!1sar!2ssa!4v1784041066433!5m2!1sar!2ssa" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen={true} 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="absolute inset-0 grayscale-[0.2] contrast-125 dark:invert-[0.9] dark:hue-rotate-180 dark:contrast-100 transition-all duration-700 hover:grayscale-0"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </SectionWrapper>
+  );
+};
+
+const AnnouncementBanner = () => {
+  const { t, language } = useLanguage();
+  return (
+    <div className="fixed top-0 left-0 right-0 h-10 bg-gradient-to-r from-amber-50 via-white to-amber-50 dark:from-amber-950/40 dark:via-black/60 dark:to-amber-950/40 backdrop-blur-md animate-gradient-x text-amber-900 dark:text-amber-100/80 flex items-center overflow-hidden z-[110] shadow-sm border-b border-amber-200/30 dark:border-white/5">
+      <div className="flex animate-marquee whitespace-nowrap min-w-full" dir="ltr">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className={`flex items-center gap-6 px-4 text-[10px] md:text-xs ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
+            <span className="font-bold flex items-center gap-1.5"><Star className="w-3.5 h-3.5 animate-[spin_3s_linear_infinite] text-yellow-300" /> {t('banner.1')}</span>
+            <span className="font-bold flex items-center gap-1.5"><Building2 className="w-3.5 h-3.5 animate-pulse text-blue-200" /> {t('banner.2')}</span>
+            <span className="font-bold flex items-center gap-1.5"><Video className="w-3.5 h-3.5 animate-[bounce_2s_infinite] text-green-300" /> {t('banner.3')}</span>
+            <span className="font-bold flex items-center gap-1.5"><Radio className="w-3.5 h-3.5 animate-pulse text-red-200" /> {t('banner.4')}</span>
+            <span className="font-bold flex items-center gap-1.5"><Camera className="w-3.5 h-3.5 animate-[spin_4s_linear_infinite] text-purple-200" /> {t('banner.5')}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+  const { t, language } = useLanguage();
+  const [data, setData] = useState<AppData>(INITIAL_DATA);
+  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+  const handleSaveData = (newData: AppData) => {
+    setData(newData);
+    setIsAdminOpen(false);
+    alert(t('contact.alertSuccess'));
+  };
+
+  return (
+    <div className="font-sans selection:bg-amber-500/30 selection:text-amber-500 bg-gray-50 dark:bg-[#050505] text-black dark:text-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "EventLive KSA",
+        "image": "https://eventliveksa.com/logo.png", // Replace with actual logo URL if available
+        "url": "https://eventliveksa.com",
+        "description": "شركة سعودية متخصصة في خدمات التصوير الفوتوغرافي والفيديو والبث المباشر للفعاليات والمؤتمرات.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "الرياض",
+          "addressCountry": "SA"
+        },
+        "sameAs": data.socialLinks.map(link => link.url).filter(Boolean)
+      })}} />
+
+      <AnnouncementBanner />
+      <ScrollProgress />
+      <MouseFollower />
+      <Sidebar onAdminClick={() => setIsAdminOpen(!isAdminOpen)} isAdminMode={isAdminOpen} onQuoteClick={() => setIsQuoteOpen(true)} />
+      
+      <AnimatePresence>
+        {isQuoteOpen && <QuoteModal isOpen={isQuoteOpen} onClose={() => setIsQuoteOpen(false)} />}
+      </AnimatePresence>
+      
+      <AnimatePresence>
+        {isAdminOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[100]"
+          >
+            <AdminPage data={data} onSave={handleSaveData} onClose={() => setIsAdminOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <main role="main" className="relative">
+        <Hero videoUrl={data.heroVideoUrl} onQuoteClick={() => setIsQuoteOpen(true)} />
+        <Partners partners={data.partners} />
+        <StatsSection />
+        <Services services={data.services} />
+        <Portfolio works={data.works} />
+        <FAQ />
+        <Process />
+        <Testimonials />
+        <Contact />
+        <MapSection />
+      </main>
+      <Footer socialLinks={data.socialLinks} />
+      <FloatingActionButtons />
+    </div>
+  );
+
+}
