@@ -533,10 +533,11 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
 
   // If videoUrl is provided from config, use it. Otherwise use a fallback image.
   // The user requested to use the custom webm video natively.
-  const isYoutube = videoUrl?.includes('youtube.com') || videoUrl?.includes('youtu.be');
+  const isYoutube = videoUrl?.includes('youtube.com') || videoUrl?.includes('youtu.be') || videoUrl?.includes('drive.google.com');
   
   const getYoutubeEmbedUrl = (url: string) => {
     if (!url) return '';
+    if (url.includes('drive.google.com')) return url;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     if (match && match[2].length === 11) {
@@ -933,10 +934,28 @@ const Portfolio = ({ works }: { works: Work[] }) => {
     });
   }, [filteredWorks]);
 
-  const isYoutube = (url: string) => url.includes('youtube.com') || url.includes('youtu.be');
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+      
+      if (e.key === 'ArrowLeft') {
+        setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
+      } else if (e.key === 'ArrowRight') {
+        setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
+      } else if (e.key === 'Escape') {
+        setSelectedIndex(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex, filteredWorks.length]);
+
+  const isYoutube = (url: string) => url.includes('youtube.com') || url.includes('youtu.be') || url.includes('drive.google.com');
 
   const getYoutubeEmbedUrl = (url: string, isLightbox = false) => {
     if (!url) return '';
+    if (url.includes('drive.google.com')) return url;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     if (match && match[2].length === 11) {
@@ -1021,7 +1040,8 @@ const Portfolio = ({ works }: { works: Work[] }) => {
           >
             <motion.button 
               whileHover={{ scale: 1.1, rotate: 90 }}
-              className="absolute top-8 rtl:left-8 ltr:right-8 text-white hover:text-amber-500 z-[210]"
+              onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
+              className="absolute top-8 rtl:left-8 ltr:right-8 text-white hover:text-amber-500 z-[210] p-2 bg-black/50 rounded-full"
             >
               <X className="w-8 h-8" />
             </motion.button>
