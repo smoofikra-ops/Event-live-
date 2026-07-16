@@ -70,35 +70,35 @@ export const getGridSpanClass = (index: number, total: number) => {
 };
 
 const INITIAL_DATA: AppData = {
-  heroVideoUrl: 'https://d.top4top.io/m_3848bb3qr1.mov',
+  heroVideoUrl: '/hero-video.mp4',
   services: [
-    { id: '1', title: "المعارض", desc: "نبرز حضوركم المميز من خلال تغطية احترافية تشمل أجنحة الزوار والفعاليات المصاحبة، بواسطة كاميرات احترافية ودرون.", iconName: 'Layout', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg' },
-    { id: '2', title: "المهرجانات", desc: "نوثق أجواء المهرجانات بكل تفاصيلها، من لحظات التفاعل الجماهيري إلى العروض الترفيهية، مع إنتاج فيديوهات مميزة.", iconName: 'Users', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg' },
-    { id: '3', title: "الفعاليات الوطنية", desc: "نعيش معكم روح المناسبة وننقل مشاعر الفخر والانتماء بعدسة فنية، نوثق الفقرات الرسمية والجماهير بأسلوب يليق بالوطن.", iconName: 'Star', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg' },
-    { id: '4', title: "حفلات الافتتاح", desc: "نحوّل لحظات الافتتاح إلى قصة مرئية تُحكى، نوثق استقبال الضيوف، لحظة قص الشريط، ونصنع فيديو مختصر «هايلايت».", iconName: 'Camera', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg' },
-    { id: '5', title: "المؤتمرات", desc: "نقدم تغطية مؤتمرات ومعارض احترافية، نوثق كل لحظة من الكلمات الرسمية إلى جلسات النقاش، مع إمكانيات البث المباشر.", iconName: 'Radio', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983656/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_%D9%84%D9%8A%D8%A8_vu6dyk.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983656/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_%D9%84%D9%8A%D8%A8_vu6dyk.jpg' },
-    { id: '6', title: "الفعاليات المؤسسية", desc: "نُقدّم تغطيات احترافية لفعاليات الشركات، المؤتمرات والاجتماعات، مع إبراز الهوية المؤسسية وتوفير خدمة البث المباشر.", iconName: 'Building2', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983618/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D9%85%D8%AA%D9%88%D9%86_bil8su.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983618/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D9%85%D8%AA%D9%88%D9%86_bil8su.jpg' },
-    { id: '7', title: "البث المباشر", desc: "نقدم خدمات البث المباشر الاحترافية للفعاليات والمؤتمرات بجودة عالية وتغطية شاملة تضمن وصول رسالتكم لأوسع جمهور.", iconName: 'Video', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983614/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA_uq6qrv.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983614/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA_uq6qrv.jpg' },
-    { id: '8', title: "الإعلانات التجارية", desc: "نصمم محتوى بصري إبداعي يُبرز كل منتج بأفضل صورة، مع إعداد ستايل تصوير مميز وإخراج احترافي.", iconName: 'Megaphone', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg' },
+    { id: '1', title: "المعارض", desc: "نبرز حضوركم المميز من خلال تغطية احترافية تشمل أجنحة الزوار والفعاليات المصاحبة، بواسطة كاميرات احترافية ودرون.", iconName: 'Layout', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg' },
+    { id: '2', title: "المهرجانات", desc: "نوثق أجواء المهرجانات بكل تفاصيلها، من لحظات التفاعل الجماهيري إلى العروض الترفيهية، مع إنتاج فيديوهات مميزة.", iconName: 'Users', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg' },
+    { id: '3', title: "الفعاليات الوطنية", desc: "نعيش معكم روح المناسبة وننقل مشاعر الفخر والانتماء بعدسة فنية، نوثق الفقرات الرسمية والجماهير بأسلوب يليق بالوطن.", iconName: 'Star', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg' },
+    { id: '4', title: "حفلات الافتتاح", desc: "نحوّل لحظات الافتتاح إلى قصة مرئية تُحكى، نوثق استقبال الضيوف، لحظة قص الشريط، ونصنع فيديو مختصر «هايلايت».", iconName: 'Camera', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg' },
+    { id: '5', title: "المؤتمرات", desc: "نقدم تغطية مؤتمرات ومعارض احترافية، نوثق كل لحظة من الكلمات الرسمية إلى جلسات النقاش، مع إمكانيات البث المباشر.", iconName: 'Radio', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983656/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_%D9%84%D9%8A%D8%A8_vu6dyk.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983656/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_%D9%84%D9%8A%D8%A8_vu6dyk.jpg' },
+    { id: '6', title: "الفعاليات المؤسسية", desc: "نُقدّم تغطيات احترافية لفعاليات الشركات، المؤتمرات والاجتماعات، مع إبراز الهوية المؤسسية وتوفير خدمة البث المباشر.", iconName: 'Building2', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983618/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D9%85%D8%AA%D9%88%D9%86_bil8su.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983618/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D9%85%D8%AA%D9%88%D9%86_bil8su.jpg' },
+    { id: '7', title: "البث المباشر", desc: "نقدم خدمات البث المباشر الاحترافية للفعاليات والمؤتمرات بجودة عالية وتغطية شاملة تضمن وصول رسالتكم لأوسع جمهور.", iconName: 'Video', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983614/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA_uq6qrv.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983614/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%B4%D8%B1%D9%83%D8%A7%D8%AA_%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA_uq6qrv.jpg' },
+    { id: '8', title: "الإعلانات التجارية", desc: "نصمم محتوى بصري إبداعي يُبرز كل منتج بأفضل صورة، مع إعداد ستايل تصوير مميز وإخراج احترافي.", iconName: 'Megaphone', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg' },
   ],
   works: [
-    { id: "1", title: "معرض", category: "المعارض", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_Eater_expo_-_%D9%85%D8%B9%D8%B1%D8%B6_mowtnv.jpg" },
-    { id: "2", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg" },
-    { id: "3", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg" },
-    { id: "4", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983458/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9469_f2hdtk.jpg" },
-    { id: "5", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg" },
-    { id: "6", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983461/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9488_zzkl6a.jpg" },
-    { id: "7", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983464/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9494_jrd1zg.jpg" },
-    { id: "8", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983465/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9502_ehjl2v.jpg" },
-    { id: "9", title: "معرض", category: "المعارض", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983467/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_Water_expo_ch1ti3.jpg" },
-    { id: "10", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983455/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_zdceym.jpg" },
-    { id: "11", title: "يوم التأسيس", category: "الفعاليات الوطنية", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983589/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A3%D9%85%D8%A7%D8%B2%D9%88%D9%86_%D9%8A%D9%88%D9%85_%D8%A7%D9%84%D8%AA%D8%A7%D8%B3%D9%8A%D8%B3_u6cbif.jpg" },
-    { id: "12", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983601/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_kwfbbz.jpg" },
-    { id: "13", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983599/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_t951me.jpg" },
-    { id: "14", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg" },
-    { id: "15", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983596/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_hkiymi.jpg" },
-    { id: "16", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983597/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D9%85%D8%B7%D8%B9%D9%85_%D9%88%D8%B1%D8%AF%D9%87_aemx3v.jpg" },
-    { id: "17", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983603/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD%D8%A7%D8%AA_%D9%85%D8%B7%D8%B9%D9%85_%D8%AD%D8%A7%D8%B4%D9%8A%D9%83%D9%85_zgrbpg.jpg" },
+    { id: "1", title: "معرض", category: "المعارض", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_Eater_expo_-_%D9%85%D8%B9%D8%B1%D8%B6_mowtnv.jpg" },
+    { id: "2", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983454/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9456_n21v5v.jpg" },
+    { id: "3", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983456/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9459_uy69pc.jpg" },
+    { id: "4", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983458/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9469_f2hdtk.jpg" },
+    { id: "5", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg" },
+    { id: "6", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983461/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9488_zzkl6a.jpg" },
+    { id: "7", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983464/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9494_jrd1zg.jpg" },
+    { id: "8", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983465/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9502_ehjl2v.jpg" },
+    { id: "9", title: "معرض", category: "المعارض", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983467/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_Water_expo_ch1ti3.jpg" },
+    { id: "10", title: "مهرجان", category: "المؤتمرات والمهرجانات", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983455/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_zdceym.jpg" },
+    { id: "11", title: "يوم التأسيس", category: "الفعاليات الوطنية", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983589/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A3%D9%85%D8%A7%D8%B2%D9%88%D9%86_%D9%8A%D9%88%D9%85_%D8%A7%D9%84%D8%AA%D8%A7%D8%B3%D9%8A%D8%B3_u6cbif.jpg" },
+    { id: "12", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983601/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_kwfbbz.jpg" },
+    { id: "13", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983599/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_t951me.jpg" },
+    { id: "14", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg" },
+    { id: "15", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983596/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_hkiymi.jpg" },
+    { id: "16", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983597/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D9%85%D8%B7%D8%B9%D9%85_%D9%88%D8%B1%D8%AF%D9%87_aemx3v.jpg" },
+    { id: "17", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983603/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD%D8%A7%D8%AA_%D9%85%D8%B7%D8%B9%D9%85_%D8%AD%D8%A7%D8%B4%D9%8A%D9%83%D9%85_zgrbpg.jpg" },
     { id: "18", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/12LLdo2omfRxTTnWZxEZ1zm0OXV_8a4AL/preview" },
     { id: "19", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/14ksSKzvbbzChCUp_HQbJJAUazg9R3nvb/preview" },
     { id: "20", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/17stbEtgqVoTMqw-ZF9XLq-WkRcqZXjRz/preview" },
@@ -354,7 +354,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       <div className="hidden md:flex fixed top-10 left-0 right-0 z-[90] h-20 items-center px-8 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm transition-all justify-between">
         <div className="w-[100px] xl:w-[200px] flex justify-start items-center">
           <a href="#home" className="flex items-center">
-            <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300" />
+            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300" />
           </a>
         </div>
         
@@ -410,7 +410,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       <div className="md:hidden fixed top-10 left-0 right-0 z-[100] h-16 flex items-center justify-between px-4 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm">
         <div className="flex-1 flex justify-start">
           <a href="#home" className="flex items-center">
-            <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
           </a>
         </div>
         <div className="flex-1 flex justify-center"></div>
@@ -443,7 +443,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
         className={`md:hidden fixed top-0 bottom-0 w-[280px] bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-3xl z-[95] border-black/10 dark:border-white/10 flex flex-col p-6 shadow-2xl ${language === "ar" ? "left-0 border-r" : "right-0 border-l"}`}
       >
         <div className="flex items-center gap-2 mb-10 mt-2">
-          <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+          <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
         </div>
 
         <ul className="space-y-2 flex-1" onMouseLeave={() => setHoveredIndex(null)}>
@@ -571,6 +571,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
                 muted={isMuted}
                 loop={true}
                 playsInline
+                preload="auto"
                 onEnded={(e) => e.currentTarget.play()}
                 poster="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
                 className="w-full h-full object-cover bg-black"
@@ -925,14 +926,20 @@ const Portfolio = ({ works }: { works: Work[] }) => {
   const selectedWork = selectedIndex !== null ? filteredWorks[selectedIndex] : null;
 
   useEffect(() => {
-    // Preload images for smooth horizontal scrolling
-    filteredWorks.forEach(work => {
-      if (work.img) {
+    // Only preload adjacent images when the modal is open
+    if (selectedIndex === null) return;
+    
+    const prevIndex = selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1;
+    const nextIndex = selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0;
+    
+    [prevIndex, nextIndex].forEach(idx => {
+      const work = filteredWorks[idx];
+      if (work?.img) {
         const img = new Image();
         img.src = work.img;
       }
     });
-  }, [filteredWorks]);
+  }, [selectedIndex, filteredWorks]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1579,7 +1586,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-black dark:text-white mb-1">{t("quote.email")}</h4>
-                  <p className="text-black/60 dark:text-white/60">info@eventliveksa.com</p>
+                  <p className="text-black/60 dark:text-white/60">Hello@eventliveksa.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -1681,7 +1688,7 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12 mb-16">
           <div className="mb-4 md:mb-0">
             <a href="#home" className="flex items-center gap-2 mb-6">
-              <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+              <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
             </a>
             <p className="text-black/60 dark:text-white/60 mb-6 leading-relaxed">
               {t("footer.companyDesc")}
@@ -1741,11 +1748,11 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
                   </div>
                   <span className="font-medium text-sm" dir="ltr">0536753679</span>
                 </a>
-                <a href="mailto:info@eventliveksa.com" className="flex items-center gap-3 text-black/60 dark:text-white/60 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
+                <a href="mailto:Hello@eventliveksa.com" className="flex items-center gap-3 text-black/60 dark:text-white/60 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
                   <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-amber-500">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <span className="font-medium text-sm" dir="ltr">info@eventliveksa.com</span>
+                  <span className="font-medium text-sm" dir="ltr">Hello@eventliveksa.com</span>
                 </a>
               </div>
 
