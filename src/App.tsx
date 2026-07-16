@@ -70,7 +70,7 @@ export const getGridSpanClass = (index: number, total: number) => {
 };
 
 const INITIAL_DATA: AppData = {
-  heroVideoUrl: 'https://eventliveksa.com/assets/videos/04-openings/1-%20%D9%85%D8%B7%D8%B9%D9%85%20%D8%AC%D8%A7%D8%B1%D8%AF%D9%86%20%D9%84%D8%A7%D9%8A%D8%AA.webm',
+  heroVideoUrl: 'https://d.top4top.io/m_3848bb3qr1.mov',
   services: [
     { id: '1', title: "المعارض", desc: "نبرز حضوركم المميز من خلال تغطية احترافية تشمل أجنحة الزوار والفعاليات المصاحبة، بواسطة كاميرات احترافية ودرون.", iconName: 'Layout', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg' },
     { id: '2', title: "المهرجانات", desc: "نوثق أجواء المهرجانات بكل تفاصيلها، من لحظات التفاعل الجماهيري إلى العروض الترفيهية، مع إنتاج فيديوهات مميزة.", iconName: 'Users', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg' },
@@ -98,7 +98,75 @@ const INITIAL_DATA: AppData = {
     { id: "14", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983595/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_boowuv.jpg" },
     { id: "15", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983596/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D8%B4%D8%B1%D9%83%D8%A9_%D8%A7%D9%84%D9%88%D8%A7%D9%81%D9%8A_hkiymi.jpg" },
     { id: "16", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983597/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD_%D9%85%D8%B7%D8%B9%D9%85_%D9%88%D8%B1%D8%AF%D9%87_aemx3v.jpg" },
-    { id: "17", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983603/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD%D8%A7%D8%AA_%D9%85%D8%B7%D8%B9%D9%85_%D8%AD%D8%A7%D8%B4%D9%8A%D9%83%D9%85_zgrbpg.jpg" }
+    { id: "17", title: "حفل افتتاح", category: "حفلات الافتتاح", img: "https://res.cloudinary.com/ozd726ro/image/upload/v1783983603/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D8%A7%D9%81%D8%AA%D8%AA%D8%A7%D8%AD%D8%A7%D8%AA_%D9%85%D8%B7%D8%B9%D9%85_%D8%AD%D8%A7%D8%B4%D9%8A%D9%83%D9%85_zgrbpg.jpg" },
+    { id: "18", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/12LLdo2omfRxTTnWZxEZ1zm0OXV_8a4AL/preview" },
+    { id: "19", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/14ksSKzvbbzChCUp_HQbJJAUazg9R3nvb/preview" },
+    { id: "20", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/17stbEtgqVoTMqw-ZF9XLq-WkRcqZXjRz/preview" },
+    { id: "21", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1L_fhoUyf3DsJV-Zm_cG7x9-opEKOY1Hd/preview" },
+    { id: "22", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1TWqX9bix2n7hjfyOX4xMpvcpa0QLnUtM/preview" },
+    { id: "23", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1eOSZ4RacrZwtCD8JW_o6zEC7N7Cpmx3Y/preview" },
+    { id: "24", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1iJMWPk5FNJpzD7hZ0OZsQtavTy7Y5-9C/preview" },
+    { id: "25", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1ndvNPiH-WplY1W_IUkJi4LDMUJ-Q7frJ/preview" },
+    { id: "26", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1-bKKZ4v6ZxXs9lcDtJBSMGFZApj9oKbE/preview" },
+    { id: "27", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/14Of_YSY1UJUXSQegz5JxDcMQYwIiL-S8/preview" },
+    { id: "28", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1Pl6FhnhgKSJt2aU3JJ9siYd1is6ru8JT/preview" },
+    { id: "29", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1aIeBp6Mt7Dwvk4xY98PYrblXCqE40vM8/preview" },
+    { id: "30", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/115Ah5uWJqfEXoG-lFFr-nNZumJ8zKFaG/preview" },
+    { id: "31", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1OK5g5z946BAUQvh6JG-KyFmuCUyxVsmm/preview" },
+    { id: "32", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1blk2SY4jzFF0qi-be6k7g4w8FhjjGIK0/preview" },
+    { id: "33", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/12OPuZ6b3J5Lq_khlql_B_Ir2fckfU4C0/preview" },
+    { id: "34", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1DQCdGcNndosQy8ZNYQTtdptAOqjhZXRW/preview" },
+    { id: "35", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1GXt9db_Yl1MIQZhlBwC4qKCdon-kVesp/preview" },
+    { id: "36", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1W5eJg_yFXFYOM_lDq-cqXfaRoUkmWvoM/preview" },
+    { id: "37", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1Y4mZXifjPJ6EOUFac2aCA6bdH3gDkrcq/preview" },
+    { id: "38", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1coEpY0WT8ItsPlW91tp7p6gI_lKczt5s/preview" },
+    { id: "39", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1luJw9fV28M_jwZK1mn4N3bXYcH2A_aML/preview" },
+    { id: "40", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/13KfsaYPTs6DE5dID6fyQydwCjgCiKHgQ/preview" },
+    { id: "41", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1L72tPeWdORgsoZKbJNeCjlBtxFvufnZz/preview" },
+    { id: "42", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1AbM9VKcYqVyFMR2pFlygRTX5TgUvrped/preview" },
+    { id: "43", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1kBae6J4Y2ep08Yc7PMDkj88yKyHaii8m/preview" },
+    { id: "44", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1lLaZESlFXjvxxzz5JvkRMTn8KLugbJfI/preview" },
+    { id: "45", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/109AkQL1X4IepmrRk_XEPkxuliLAooOrZ/preview" },
+    { id: "46", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/18r144zqdcZUUmUP_KDGJTbaolej_tWvt/preview" },
+    { id: "47", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1C_UylLtxWh5dAu9gR5jnC_XAOy9m0w_9/preview" },
+    { id: "48", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1IGu15ZLIvPEvq7d-jRO3dIS9z8m4ImIp/preview" },
+    { id: "49", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1I_5y5kyQXOy7fOhL33ruHqcSfa1VAhyv/preview" },
+    { id: "50", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1KkhQIBw6Y7x_1rTl6YRRoO2HjKo2AW2q/preview" },
+    { id: "51", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1QK6x7CBd8_mi16jhgOt7qClsyyVLFKj9/preview" },
+    { id: "52", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1QuHezy4XiPjdOje2FpjvPz2fm3ZQK83E/preview" },
+    { id: "53", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1Uxwet14ii7krk42gYQxHHADNVxfaXC_c/preview" },
+    { id: "54", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1Y1IHDR5Jzvu79EqEXxX3DT_y-iH_4QLY/preview" },
+    { id: "55", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1kHiMH2jkMvypytPWmSOt1d2KQE_bGHyO/preview" },
+    { id: "56", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1vRhbTLjyznbr9S0cDsFRKrAP2bNCCO_U/preview" },
+    { id: "57", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/12YJ0Ve7pMEflWVmc3ShjRqNcvzkdMlWl/preview" },
+    { id: "58", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1OYIrmsECCgC19KxerwCXxJZowu2HY9BA/preview" },
+    { id: "59", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1hxKa8hgecJt2ziQd0275UvN4sBndxmX6/preview" },
+    { id: "60", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1mFXBkq_3AVEW2amc-cNjBCNM_RA_eeso/preview" },
+    { id: "61", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1x866FbDXGv04HwdztPuoljJR4uiDjqLQ/preview" },
+    { id: "62", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1-qaSg8DfHuqSnyK0EpNUDuNK5idDT0oV/preview" },
+    { id: "63", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1I_OnhVKeU2pCxwd46iAt5AqUhg1bpRVI/preview" },
+    { id: "64", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1JjjveS8JVim1hNRlvPuewhfKseimYcsT/preview" },
+    { id: "65", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1NH8FvcE9wVFubAzpD9HxaPOROmjmRtOC/preview" },
+    { id: "66", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1U84IK5Zkz5wDsSw45ga8i-WpPTRxjhwn/preview" },
+    { id: "67", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1X62IXzTl9MxGrb4g8PNKxiJefCG7Cy0F/preview" },
+    { id: "68", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1hwsPzKr9fSLUJfnXLBeR3dbzJ2IrVyj2/preview" },
+    { id: "69", title: "فيديو", category: "أعمال فيديو", img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800", videoUrl: "https://drive.google.com/file/d/1y9R8BGNJGos64lOYM8hrfQP0ZlYOcPGv/preview" }
+  ],
+  partners: [
+    { id: "1", name: "Partner 1", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982655/ALJAZIRA_CAPITAL_LOGO_qssrgs.jpg" },
+    { id: "2", name: "Partner 2", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982666/ALRAJHI_CAPITAL_LOGO_y5vptj.jpg" },
+    { id: "3", name: "Partner 3", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982645/ARDARA_LOGO_cmkut0.jpg" },
+    { id: "4", name: "Partner 4", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982656/BADAEL_LOGO_vfxatu.jpg" },
+    { id: "5", name: "Partner 5", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982648/DIGITAL_GOVERNMENT_AUTHORITY_qaysvp.jpg" },
+    { id: "6", name: "Partner 6", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982659/INDUSTRIAL_CENTER_LOGO_bb1maq.jpg" },
+    { id: "7", name: "Partner 7", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982667/INILEVEN_LOGO_wgttos.jpg" },
+    { id: "8", name: "Partner 8", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982663/MINISTRY_OF_CULTURE_LOGO_o0m8qb.jpg" },
+    { id: "9", name: "Partner 9", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982698/MINISTRY_OF_HOUSING_LOGO_bwwxcp.jpg" },
+    { id: "10", name: "Partner 10", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982699/MINISTRY_OF_INDUSTRYAND_MINERAL_RESOURCES_LOGO_zng54u.jpg" },
+    { id: "11", name: "Partner 11", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982700/MINISTRY_OF_SPORT_LOGO_xx9iub.jpg" },
+    { id: "12", name: "Partner 12", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982701/MOIA_LOGO_dmz1sd.jpg" },
+    { id: "13", name: "Partner 13", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982702/MONSHAAT_LOGO_qwnlwh.jpg" },
+    { id: "14", name: "Partner 14", logo: "https://res.cloudinary.com/ozd726ro/image/upload/h_250,fl_preserve_transparency/v1783982703/NADEC_LOGO_e9tlii.jpg" },
   ],
   socialLinks: [
     { platform: 'twitter', url: 'https://twitter.com/eventliveksa' },
@@ -284,12 +352,15 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex fixed top-10 left-0 right-0 z-[90] h-20 items-center px-8 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm transition-all justify-between">
-        {/* Empty left space to balance the right side controls */}
-        <div className="w-[100px] xl:w-[200px]"></div>
+        <div className="w-[100px] xl:w-[200px] flex justify-start items-center">
+          <a href="#home" className="flex items-center">
+            <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300" />
+          </a>
+        </div>
         
         <div className="flex-1 flex justify-center relative">
           <ul className="flex items-center gap-2 md:gap-4" onMouseLeave={() => setHoveredIndex(null)}>
-            {navLinks.slice(0, 2).map((link, idx) => (
+            {navLinks.map((link, idx) => (
               <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
                 <a 
                   href={link.href} 
@@ -310,36 +381,6 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
                 )}
               </li>
             ))}
-            
-            <li className="mx-2 lg:mx-6 flex items-center justify-center relative z-10">
-              <a href="#home" className="flex items-center">
-                <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300" />
-              </a>
-            </li>
-
-            {navLinks.slice(2).map((link, i) => {
-              const idx = i + 2;
-              return (
-              <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
-                <a 
-                  href={link.href} 
-                  className="relative z-10 flex items-center gap-2 px-4 py-2 font-bold text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors duration-300 text-sm lg:text-base"
-                >
-                  {link.icon}
-                  {link.label}
-                </a>
-                {hoveredIndex === idx && (
-                  <motion.div
-                    layoutId="mercury-desktop-nav"
-                    className="absolute inset-0 bg-gradient-to-r from-amber-500/80 to-amber-300/80 dark:from-amber-600/50 dark:to-orange-500/50 rounded-xl -z-0 backdrop-blur-md shadow-[0_0_15px_rgba(255,138,0,0.5)]"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-              </li>
-            )})}
           </ul>
         </div>
         
@@ -367,10 +408,12 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       </div>
       {/* Mobile Navigation Header */}
       <div className="md:hidden fixed top-10 left-0 right-0 z-[100] h-16 flex items-center justify-between px-4 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm">
-        <div className="flex-1"></div>
-        <a href="#home" className="flex items-center justify-center flex-1">
-          <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
-        </a>
+        <div className="flex-1 flex justify-start">
+          <a href="#home" className="flex items-center">
+            <img src="https://res.cloudinary.com/ozd726ro/image/upload/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+          </a>
+        </div>
+        <div className="flex-1 flex justify-center"></div>
         <div className="flex-1 flex justify-end">
           <button 
             onClick={() => setIsOpen(!isOpen)}
@@ -525,8 +568,9 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
                 src={videoUrl}
                 autoPlay
                 muted={isMuted}
-                loop
+                loop={true}
                 playsInline
+                onEnded={(e) => e.currentTarget.play()}
                 poster="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
                 className="w-full h-full object-cover bg-black"
                 style={{ objectPosition: 'center center' }}
@@ -671,6 +715,7 @@ const StatsSection = () => {
 const Services = ({ services }: { services: Service[] }) => {
   const { t, language } = useLanguage();
   const [tick, setTick] = useState(0);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -720,6 +765,16 @@ const Services = ({ services }: { services: Service[] }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
+              onClick={() => {
+                if (s.id === '1') setSelectedVideo('https://drive.google.com/file/d/1ndvNPiH-WplY1W_IUkJi4LDMUJ-Q7frJ/preview');
+                else if (s.id === '2') setSelectedVideo('https://drive.google.com/file/d/1-bKKZ4v6ZxXs9lcDtJBSMGFZApj9oKbE/preview');
+                else if (s.id === '3') setSelectedVideo('https://drive.google.com/file/d/1OK5g5z946BAUQvh6JG-KyFmuCUyxVsmm/preview');
+                else if (s.id === '4') setSelectedVideo('https://drive.google.com/file/d/1GXt9db_Yl1MIQZhlBwC4qKCdon-kVesp/preview');
+                else if (s.id === '5') setSelectedVideo('https://drive.google.com/file/d/1L72tPeWdORgsoZKbJNeCjlBtxFvufnZz/preview');
+                else if (s.id === '6') setSelectedVideo('https://drive.google.com/file/d/1kBae6J4Y2ep08Yc7PMDkj88yKyHaii8m/preview');
+                else if (s.id === '7') setSelectedVideo('https://drive.google.com/file/d/1fWpWb3THK493zIIatv_u9ayOmUlxS258/preview');
+                else if (s.id === '8') setSelectedVideo('https://drive.google.com/file/d/1y9R8BGNJGos64lOYM8hrfQP0ZlYOcPGv/preview');
+              }}
               
               className={`bg-white dark:bg-[#111] p-5 md:p-8 rounded-[2rem] transition-all duration-500 group cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[160px] sm:min-h-[250px] md:min-h-[350px] flex-shrink-0 w-full shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-t border-l border-white/80 dark:border-white/10 border-b-4 border-r-4 border-black/5 dark:border-black/40 hover:-translate-y-2 hover:border-amber-500/30 dark:hover:border-amber-500/30 hover:shadow-[0_20px_40px_rgba(255,138,0,0.15)] ${spanClass}`}
             >
@@ -760,6 +815,41 @@ const Services = ({ services }: { services: Service[] }) => {
           );
         })}
       </div>
+      <AnimatePresence>
+        {selectedVideo && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 md:p-12">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+              onClick={() => setSelectedVideo(null)}
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20"
+            >
+              <button
+                onClick={(e) => { e.stopPropagation(); setSelectedVideo(null); }}
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-50 p-2 bg-black/50 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors border border-white/10"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <iframe
+                src={selectedVideo}
+                className="w-full h-full"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              ></iframe>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </SectionWrapper>
   );
 };
@@ -2186,6 +2276,56 @@ const CameraFrameOverlay = () => {
 };
 
 
+
+
+const mockReviews = [
+  { author: "Mohammed", text: "خدمة احترافية بمعنى الكلمة! تعاملت مع \"ايفنت لايف\" بقيادة الأستاذ سامر العبسي، وكان التعامل راقٍ جدًا والتنظيم ممتاز. التغطية كانت بجودة عالية سواء في التصوير الفوتوغرافي أو الفيديو، وكل التفاصيل كانت مدروسة بعناية. أنصح أي شخص يبحث عن توثيق احترافي لأي مناسبة يتواصل معهم بدون تردد" },
+  { author: "محمد عبده الحطامي", text: "كل الشكر والتقدير لطاقم ايفنت لايف مبدعين و متميزين" },
+  { author: "abdalkrim abdalkrim", text: "ممتاز جداً ملابس جديده ووحدات تصوير كامله باحدث الاجهزة والكامرات انصحكم به وتجربته بقياده الاخ صلاح الصنعاني" },
+  { author: "Sweed R", text: "شغل ممتاز وشباب نشيطين وسعر معقول بالنسبه للشغل انصح فيهم 👍🏽👍🏽" }
+];
+
+const MapReviewsOverlay = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % mockReviews.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none flex items-center justify-center pb-24 z-20 overflow-hidden">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, y: 20, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.8 }}
+          transition={{ duration: 0.5, type: "spring", bounce: 0.4 }}
+          className="bg-white/95 dark:bg-black/90 backdrop-blur-md px-4 py-3 rounded-2xl shadow-2xl border border-black/10 dark:border-white/10 max-w-[250px] md:max-w-[300px] text-center relative"
+        >
+          {/* Tail of the speech bubble */}
+          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-t-[14px] border-t-white/95 dark:border-t-black/90 border-r-[10px] border-r-transparent drop-shadow-md"></div>
+          
+          <div className="flex justify-center gap-0.5 mb-1.5 text-amber-400">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-3.5 h-3.5 fill-current" />
+            ))}
+          </div>
+          <p className="text-black/80 dark:text-white/80 text-xs md:text-sm font-medium mb-1.5 leading-relaxed" dir="rtl">
+            "{mockReviews[currentIndex].text}"
+          </p>
+          <span className="text-[10px] text-black/50 dark:text-white/50 font-bold block">
+            {mockReviews[currentIndex].author} - عبر جوجل ماب
+          </span>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const MapSection = () => {
   return (
     <SectionWrapper id="map" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-20 border-b border-black/5 dark:border-white/5">
@@ -2198,10 +2338,7 @@ const MapSection = () => {
         </ScrollReveal>
         <ScrollReveal className="delay-100">
           <div className="relative max-w-5xl mx-auto">
-            {/* 3D Shadow underneath */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/20 to-amber-600/20 blur-xl opacity-50 dark:opacity-30 rounded-[3rem] -z-10"></div>
-            
-            <div className="animated-border-container shadow-[0_20px_50px_rgba(0,0,0,0.2)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="animated-border-container shadow-sm dark:shadow-md">
               <div className="animated-border-gradient"></div>
               <div className="relative bg-white dark:bg-[#111] rounded-[22px] overflow-hidden z-10 h-[400px] md:h-[500px] p-2">
                 <div className="w-full h-full rounded-[16px] overflow-hidden relative">
@@ -2215,6 +2352,7 @@ const MapSection = () => {
                     referrerPolicy="no-referrer-when-downgrade"
                     className="absolute inset-0 grayscale-[0.2] contrast-125 dark:invert-[0.9] dark:hue-rotate-180 dark:contrast-100 transition-all duration-700 hover:grayscale-0"
                   ></iframe>
+                  <MapReviewsOverlay />
                 </div>
               </div>
             </div>
