@@ -70,7 +70,7 @@ export const getGridSpanClass = (index: number, total: number) => {
 };
 
 const INITIAL_DATA: AppData = {
-  heroVideoUrl: '/hero-video.mp4',
+  heroVideoUrl: 'https://a.top4top.io/m_385032blp1.mov',
   services: [
     { id: '1', title: "المعارض", desc: "نبرز حضوركم المميز من خلال تغطية احترافية تشمل أجنحة الزوار والفعاليات المصاحبة، بواسطة كاميرات احترافية ودرون.", iconName: 'Layout', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983632/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_%D9%85%D8%B9%D8%B1%D8%B6_water_expo_wfofmm.jpg' },
     { id: '2', title: "المهرجانات", desc: "نوثق أجواء المهرجانات بكل تفاصيلها، من لحظات التفاعل الجماهيري إلى العروض الترفيهية، مع إنتاج فيديوهات مميزة.", iconName: 'Users', mediaType: 'image', mediaValue: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg', cardBgImage: 'https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg' },
@@ -354,7 +354,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       <div className="hidden md:flex fixed top-10 left-0 right-0 z-[90] h-20 items-center px-8 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm transition-all justify-between">
         <div className="w-[100px] xl:w-[200px] flex justify-start items-center">
           <a href="#home" className="flex items-center">
-            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300" />
+            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300"  loading="lazy" />
           </a>
         </div>
         
@@ -410,7 +410,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       <div className="md:hidden fixed top-10 left-0 right-0 z-[100] h-16 flex items-center justify-between px-4 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm">
         <div className="flex-1 flex justify-start">
           <a href="#home" className="flex items-center">
-            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
           </a>
         </div>
         <div className="flex-1 flex justify-center"></div>
@@ -443,7 +443,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
         className={`md:hidden fixed top-0 bottom-0 w-[280px] bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-3xl z-[95] border-black/10 dark:border-white/10 flex flex-col p-6 shadow-2xl ${language === "ar" ? "left-0 border-r" : "right-0 border-l"}`}
       >
         <div className="flex items-center gap-2 mb-10 mt-2">
-          <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+          <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
         </div>
 
         <ul className="space-y-2 flex-1" onMouseLeave={() => setHoveredIndex(null)}>
@@ -530,6 +530,13 @@ const Counter = ({ value, duration = 2, suffix = "" }: { value: number, duration
 const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () => void }) => {
   const { t, language } = useLanguage();
   const [isMuted, setIsMuted] = useState(true);
+  const [loadVideo, setLoadVideo] = useState(false);
+
+  useEffect(() => {
+    // Delay loading the video to prioritize page load speed
+    const timer = setTimeout(() => setLoadVideo(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // If videoUrl is provided from config, use it. Otherwise use a fallback image.
   // The user requested to use the custom webm video natively.
@@ -556,26 +563,41 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
         {videoUrl ? (
           isYoutube ? (
             <div className="w-full h-full scale-110">
-              <iframe 
-                src={embedUrl}
-                className="w-full h-full pointer-events-none object-cover"
-                allow="autoplay; encrypted-media"
-                title="Hero Background"
-              ></iframe>
+              {loadVideo && (
+                <iframe 
+                  src={embedUrl}
+                  className="w-full h-full pointer-events-none object-cover transition-opacity duration-1000 animate-in fade-in"
+                  allow="autoplay; encrypted-media"
+                  title="Hero Background"
+                ></iframe>
+              )}
             </div>
           ) : (
             <div className="w-full h-full relative">
               <video 
-                src={videoUrl}
                 autoPlay
                 muted={isMuted}
                 loop={true}
                 playsInline
-                preload="auto"
+                preload="none"
                 onEnded={(e) => e.currentTarget.play()}
                 poster="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
-                className="w-full h-full object-cover bg-black"
+                className={`w-full h-full object-cover bg-black transition-opacity duration-1000 ${loadVideo ? 'opacity-100' : 'opacity-0'}`}
                 style={{ objectPosition: 'center center' }}
+              >
+                {loadVideo && videoUrl && (
+                  <>
+                    <source src={videoUrl} type="video/quicktime" />
+                    <source src={videoUrl} type="video/mp4" />
+                    متصفحك لا يدعم تشغيل الفيديو.
+                  </>
+                )}
+              </video>
+              <img 
+                src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
+                alt="Poster placeholder"
+                className={`absolute inset-0 w-full h-full object-cover -z-10 transition-opacity duration-1000 ${loadVideo ? 'opacity-0' : 'opacity-100'}`}
+                loading="lazy"
               />
               <button 
                 onClick={() => setIsMuted(!isMuted)}
@@ -595,7 +617,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
             src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070" 
             className="w-full h-full object-cover opacity-60 md:opacity-40"
             alt="خلفية لفعالية حية"
-            loading="eager"
+            loading="lazy"
             referrerPolicy="no-referrer"
           />
         )}
@@ -833,7 +855,7 @@ const Services = ({ services }: { services: Service[] }) => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20"
+              className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20 flex flex-col items-center justify-center"
             >
               <button
                 onClick={(e) => { e.stopPropagation(); setSelectedVideo(null); }}
@@ -844,8 +866,8 @@ const Services = ({ services }: { services: Service[] }) => {
               
               <iframe
                 src={selectedVideo}
-                className="w-full h-full"
-                allow="autoplay; encrypted-media"
+                className="w-full h-full pointer-events-auto"
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                 allowFullScreen
               ></iframe>
             </motion.div>
@@ -999,12 +1021,12 @@ const Portfolio = ({ works }: { works: Work[] }) => {
         >
           {/* Stack effect images (shadows/depth) */}
           <div className="absolute inset-0 bg-white dark:bg-[#222] rounded-2xl transform rotate-[8deg] translate-x-8 md:translate-x-12 translate-y-4 scale-90 shadow-2xl transition-all duration-700 group-hover:rotate-[15deg] group-hover:translate-x-16 group-hover:translate-y-6 overflow-hidden border border-black/10 dark:border-white/10 opacity-60">
-             {works[2] && <img src={works[2].img} className="w-full h-full object-cover blur-[2px] grayscale-[30%]" alt="bg" />}
+             {works[2] && <img src={works[2].img} className="w-full h-full object-cover blur-[2px] grayscale-[30%]" alt="bg"  loading="lazy" />}
              <div className="absolute inset-0 bg-black/30"></div>
           </div>
           
           <div className="absolute inset-0 bg-gray-100 dark:bg-[#1a1a1a] rounded-2xl transform -rotate-[6deg] -translate-x-6 md:-translate-x-10 translate-y-2 scale-95 shadow-2xl transition-all duration-700 group-hover:-rotate-[12deg] group-hover:-translate-x-14 group-hover:translate-y-4 overflow-hidden border border-black/10 dark:border-white/10 opacity-80">
-             {works[1] && <img src={works[1].img} className="w-full h-full object-cover blur-[1px] grayscale-[20%]" alt="bg" />}
+             {works[1] && <img src={works[1].img} className="w-full h-full object-cover blur-[1px] grayscale-[20%]" alt="bg"  loading="lazy" />}
              <div className="absolute inset-0 bg-black/20"></div>
           </div>
 
@@ -1015,7 +1037,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                 src={works[0].img} 
                 alt="Main Album"
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-              />
+               loading="lazy" />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-6 md:p-8">
               <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center text-center">
@@ -1048,7 +1070,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
             <motion.button 
               whileHover={{ scale: 1.1, rotate: 90 }}
               onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
-              className="absolute top-8 rtl:left-8 ltr:right-8 text-white hover:text-amber-500 z-[210] p-2 bg-black/50 rounded-full"
+              className="absolute top-8 right-8 rtl:right-auto rtl:left-8 text-white hover:text-amber-500 z-[210] p-2 bg-black/50 rounded-full"
             >
               <X className="w-8 h-8" />
             </motion.button>
@@ -1093,14 +1115,14 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                 }
               }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-5xl aspect-video bg-[#111] rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing"
+              className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
             >
               {selectedWork.videoUrl ? (
                 isYoutube(selectedWork.videoUrl) ? (
                   <iframe 
                     src={getYoutubeEmbedUrl(selectedWork.videoUrl, true)}
                     className="w-full h-full pointer-events-auto"
-                    allow="autoplay; encrypted-media"
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                     allowFullScreen
                   ></iframe>
                 ) : (
@@ -1114,7 +1136,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                   />
                 )
               ) : (
-                <img src={selectedWork.img} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title} />
+                <img src={selectedWork.img} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title}  loading="lazy" />
               )}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none">
                 <div className="transform translate-y-0">
@@ -1293,7 +1315,7 @@ const Partners = ({ partners = [] }: { partners?: Partner[] }) => {
                 src={p.logo} 
                 alt={p.name} 
                 className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover/card:scale-110" 
-              />
+               loading="lazy" />
             </div>
           ))}
         </div>
@@ -1688,7 +1710,7 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12 mb-16">
           <div className="mb-4 md:mb-0">
             <a href="#home" className="flex items-center gap-2 mb-6">
-              <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]" />
+              <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
             </a>
             <p className="text-black/60 dark:text-white/60 mb-6 leading-relaxed">
               {t("footer.companyDesc")}
