@@ -174,8 +174,8 @@ export const CustomHeroSequence = () => {
         ))}
       </div>
 
-      <h1 className="text-5xl md:text-[52px] font-bold leading-[1.2] mb-6 tracking-tight hero-heading-gradient min-h-[130px] flex flex-wrap items-center gap-x-2">
-        <span>{title1}</span>
+      <h1 className="text-[40px] font-bold leading-[1.2] mb-6 tracking-tight hero-heading-gradient min-h-[130px] flex flex-wrap items-center gap-x-2">
+        <span style={{ fontSize: '31px', lineHeight: '64.6px', height: '39.6016px' }}>{title1}</span>
         <AnimatePresence mode="wait">
           {showHeart && (
             <motion.span 
@@ -200,10 +200,10 @@ export const CustomHeroSequence = () => {
             </motion.span>
           )}
         </AnimatePresence>
-        <span className="text-gradient">{title2}</span>
+        <span className="text-gradient" style={{ fontSize: '34px', lineHeight: '61.6px', height: '49.6016px' }}>{title2}</span>
       </h1>
       
-      <p className="text-lg md:text-[18px] text-white/90 mb-12 leading-[1.75] max-w-[70ch] font-normal min-h-[90px]">
+      <p className="text-[16px] text-white/90 mb-12 leading-[1.75] max-w-[70ch] font-normal min-h-[90px]" style={{ height: '82px' }}>
         {sub1}
         <span className="text-amber-500 font-bold">{sub2}</span>
         {sub3}

@@ -18,6 +18,15 @@ import {
 } from "lucide-react";
 import React, { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { useLanguage } from "./LanguageContext";
+
+export const getOptimizedImageUrl = (url?: string) => {
+  if (!url) return "";
+  if (url.includes("cloudinary.com") && !url.includes("f_auto") && !url.includes("q_auto")) {
+    return url.replace("/upload/", "/upload/f_auto,q_auto/");
+  }
+  return url;
+};
+
 import { CustomHeroSequence } from "./CustomHeroSequence";
 
 // --- Types ---
@@ -305,24 +314,28 @@ const XIcon = ({ className }: { className?: string }) => (
 );
 
 const ThemeToggle = () => {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved === 'dark';
+      return document.documentElement.classList.contains('dark');
+    } catch(e) {
+      return true;
+    }
+  });
 
   useEffect(() => {
-    if (document.documentElement.classList.contains('dark')) {
-      setIsDark(true);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     } else {
-      setIsDark(false);
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
-  }, []);
+  }, [isDark]);
 
   const toggleTheme = () => {
-    if (isDark) {
-      document.documentElement.classList.remove('dark');
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      setIsDark(true);
-    }
+    setIsDark(!isDark);
   };
 
   return (
@@ -354,7 +367,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       <div className="hidden md:flex fixed top-10 left-0 right-0 z-[90] h-20 items-center px-8 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm transition-all justify-between">
         <div className="w-[100px] xl:w-[200px] flex justify-start items-center">
           <a href="#home" className="flex items-center">
-            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300"  loading="lazy" />
+            <img src={getOptimizedImageUrl("https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png")} alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)] transition-transform hover:scale-105 duration-300"  loading="lazy" />
           </a>
         </div>
         
@@ -410,7 +423,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
       <div className="md:hidden fixed top-10 left-0 right-0 z-[100] h-16 flex items-center justify-between px-4 bg-white/60 dark:bg-[#0a0a0a]/60 backdrop-blur-xl border-b border-black/10 dark:border-white/10 shadow-sm">
         <div className="flex-1 flex justify-start">
           <a href="#home" className="flex items-center">
-            <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
+            <img src={getOptimizedImageUrl("https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png")} alt="EventLive" className="h-8 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
           </a>
         </div>
         <div className="flex-1 flex justify-center"></div>
@@ -443,7 +456,7 @@ const Sidebar = ({ onAdminClick, isAdminMode, onQuoteClick }: { onAdminClick: ()
         className={`md:hidden fixed top-0 bottom-0 w-[280px] bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-3xl z-[95] border-black/10 dark:border-white/10 flex flex-col p-6 shadow-2xl ${language === "ar" ? "left-0 border-r" : "right-0 border-l"}`}
       >
         <div className="flex items-center gap-2 mb-10 mt-2">
-          <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
+          <img src={getOptimizedImageUrl("https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png")} alt="EventLive" className="h-10 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
         </div>
 
         <ul className="space-y-2 flex-1" onMouseLeave={() => setHoveredIndex(null)}>
@@ -530,13 +543,6 @@ const Counter = ({ value, duration = 2, suffix = "" }: { value: number, duration
 const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () => void }) => {
   const { t, language } = useLanguage();
   const [isMuted, setIsMuted] = useState(true);
-  const [loadVideo, setLoadVideo] = useState(false);
-
-  useEffect(() => {
-    // Delay loading the video to prioritize page load speed
-    const timer = setTimeout(() => setLoadVideo(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // If videoUrl is provided from config, use it. Otherwise use a fallback image.
   // The user requested to use the custom webm video natively.
@@ -544,7 +550,13 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
   
   const getYoutubeEmbedUrl = (url: string) => {
     if (!url) return '';
-    if (url.includes('drive.google.com')) return url;
+    if (url.includes('drive.google.com')) {
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match) {
+        return `https://drive.google.com/file/d/${match[1]}/preview?autoplay=1`;
+      }
+      return url;
+    }
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     if (match && match[2].length === 11) {
@@ -563,14 +575,12 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
         {videoUrl ? (
           isYoutube ? (
             <div className="w-full h-full scale-110">
-              {loadVideo && (
-                <iframe 
-                  src={embedUrl}
-                  className="w-full h-full pointer-events-none object-cover transition-opacity duration-1000 animate-in fade-in"
-                  allow="autoplay; encrypted-media"
-                  title="Hero Background"
-                ></iframe>
-              )}
+              <iframe 
+                src={embedUrl}
+                className="w-full h-full pointer-events-none object-cover transition-opacity duration-1000 animate-in fade-in"
+                allow="autoplay; encrypted-media"
+                title="Hero Background"
+              ></iframe>
             </div>
           ) : (
             <div className="w-full h-full relative">
@@ -579,13 +589,12 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
                 muted={isMuted}
                 loop={true}
                 playsInline
-                preload="none"
-                onEnded={(e) => e.currentTarget.play()}
-                poster="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
-                className={`w-full h-full object-cover bg-black transition-opacity duration-1000 ${loadVideo ? 'opacity-100' : 'opacity-0'}`}
+                preload="auto"
+                poster="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1920/v1783983460/%D9%86%D8%B3%D8%AE%D8%A9_%D9%85%D9%86_IMG_9484_siyppe.jpg"
+                className="w-full h-full object-cover bg-black"
                 style={{ objectPosition: 'center center' }}
               >
-                {loadVideo && videoUrl && (
+                {videoUrl && (
                   <>
                     <source src={videoUrl} type="video/quicktime" />
                     <source src={videoUrl} type="video/mp4" />
@@ -593,12 +602,6 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
                   </>
                 )}
               </video>
-              <img 
-                src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070"
-                alt="Poster placeholder"
-                className={`absolute inset-0 w-full h-full object-cover -z-10 transition-opacity duration-1000 ${loadVideo ? 'opacity-0' : 'opacity-100'}`}
-                loading="lazy"
-              />
               <button 
                 onClick={() => setIsMuted(!isMuted)}
                 className="absolute bottom-4 rtl:right-4 ltr:left-4 md:bottom-8 md:rtl:right-8 md:ltr:left-8 z-50 p-2 md:p-4 rounded-full bg-black/30 backdrop-blur-md border border-white/10 text-white hover:bg-black/50 transition-colors hover:scale-110 active:scale-95 group"
@@ -613,13 +616,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
             </div>
           )
         ) : (
-          <img 
-            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070" 
-            className="w-full h-full object-cover opacity-60 md:opacity-40"
-            alt="خلفية لفعالية حية"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
+          <div className="w-full h-full bg-[#111]"></div>
         )}
         
         {/* Dark Overlay for text clarity on desktop */}
@@ -655,7 +652,8 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/20 text-amber-500 md:text-amber-400 text-sm font-black mb-8"
+            className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/20 text-amber-500 md:text-amber-400 font-black mb-8"
+            style={{ fontSize: '10px' }}
           >
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
             {t('hero.badge')}
@@ -805,7 +803,7 @@ const Services = ({ services }: { services: Service[] }) => {
               {s.cardBgImage && (
                 <>
                   <img 
-                    src={s.cardBgImage} 
+                    src={getOptimizedImageUrl(s.cardBgImage)} 
                     alt={s.title} 
                     className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${s.id === '7' ? 'animate-blur-pulse group-hover:blur-none' : 'blur-[8px] group-hover:blur-none'} group-hover:scale-110 z-0 scale-105`}
                     loading="lazy"
@@ -859,7 +857,7 @@ const Services = ({ services }: { services: Service[] }) => {
             >
               <button
                 onClick={(e) => { e.stopPropagation(); setSelectedVideo(null); }}
-                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-50 p-2 bg-black/50 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors border border-white/10"
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-[250] p-2 bg-black/50 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors border border-white/10 shadow-lg"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -909,7 +907,7 @@ const PortfolioMediaContent = ({ w, isYoutube, getYoutubeEmbedUrl, selectedWork 
         )
       ) : (
         <img 
-          src={w.img} 
+          src={getOptimizedImageUrl(w.img)} 
           className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 relative z-10 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
           alt={w.title}
           loading="lazy"
@@ -924,6 +922,24 @@ const Portfolio = ({ works }: { works: Work[] }) => {
   const { t, language } = useLanguage();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('portfolio.all');
+  const videoContainerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleOrientationChange = () => {
+      if (selectedIndex !== null && videoContainerRef.current) {
+        const isLandscape = window.orientation === 90 || window.orientation === -90 || window.screen?.orientation?.type.includes('landscape');
+        if (isLandscape) {
+          if (videoContainerRef.current.requestFullscreen) {
+            videoContainerRef.current.requestFullscreen().catch(() => {});
+          } else if ((videoContainerRef.current as any).webkitRequestFullscreen) {
+            (videoContainerRef.current as any).webkitRequestFullscreen();
+          }
+        }
+      }
+    };
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => window.removeEventListener('orientationchange', handleOrientationChange);
+  }, [selectedIndex]);
 
   const categories = ['portfolio.all', 'المعارض', 'حفلات الافتتاح', 'الفعاليات الوطنية', 'المؤتمرات والمهرجانات'];
   
@@ -984,7 +1000,13 @@ const Portfolio = ({ works }: { works: Work[] }) => {
 
   const getYoutubeEmbedUrl = (url: string, isLightbox = false) => {
     if (!url) return '';
-    if (url.includes('drive.google.com')) return url;
+    if (url.includes('drive.google.com')) {
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match) {
+        return `https://drive.google.com/file/d/${match[1]}/preview?autoplay=1`;
+      }
+      return url;
+    }
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     if (match && match[2].length === 11) {
@@ -1021,12 +1043,12 @@ const Portfolio = ({ works }: { works: Work[] }) => {
         >
           {/* Stack effect images (shadows/depth) */}
           <div className="absolute inset-0 bg-white dark:bg-[#222] rounded-2xl transform rotate-[8deg] translate-x-8 md:translate-x-12 translate-y-4 scale-90 shadow-2xl transition-all duration-700 group-hover:rotate-[15deg] group-hover:translate-x-16 group-hover:translate-y-6 overflow-hidden border border-black/10 dark:border-white/10 opacity-60">
-             {works[2] && <img src={works[2].img} className="w-full h-full object-cover blur-[2px] grayscale-[30%]" alt="bg"  loading="lazy" />}
+             {works[2] && <img src={getOptimizedImageUrl(works[2].img)} className="w-full h-full object-cover blur-[2px] grayscale-[30%]" alt="bg"  loading="lazy" />}
              <div className="absolute inset-0 bg-black/30"></div>
           </div>
           
           <div className="absolute inset-0 bg-gray-100 dark:bg-[#1a1a1a] rounded-2xl transform -rotate-[6deg] -translate-x-6 md:-translate-x-10 translate-y-2 scale-95 shadow-2xl transition-all duration-700 group-hover:-rotate-[12deg] group-hover:-translate-x-14 group-hover:translate-y-4 overflow-hidden border border-black/10 dark:border-white/10 opacity-80">
-             {works[1] && <img src={works[1].img} className="w-full h-full object-cover blur-[1px] grayscale-[20%]" alt="bg"  loading="lazy" />}
+             {works[1] && <img src={getOptimizedImageUrl(works[1].img)} className="w-full h-full object-cover blur-[1px] grayscale-[20%]" alt="bg"  loading="lazy" />}
              <div className="absolute inset-0 bg-black/20"></div>
           </div>
 
@@ -1034,7 +1056,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
           <div className="absolute inset-0 bg-white dark:bg-[#111] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-700 group-hover:-translate-y-4 group-hover:scale-[1.02] overflow-hidden border border-black/5 dark:border-white/10 z-10 flex flex-col">
             {works[0] && (
               <img 
-                src={works[0].img} 
+                src={getOptimizedImageUrl(works[0].img)} 
                 alt="Main Album"
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                loading="lazy" />
@@ -1067,13 +1089,6 @@ const Portfolio = ({ works }: { works: Work[] }) => {
             onClick={() => setSelectedIndex(null)}
             className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-12"
           >
-            <motion.button 
-              whileHover={{ scale: 1.1, rotate: 90 }}
-              onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
-              className="absolute top-8 right-8 rtl:right-auto rtl:left-8 text-white hover:text-amber-500 z-[210] p-2 bg-black/50 rounded-full"
-            >
-              <X className="w-8 h-8" />
-            </motion.button>
             
             {/* Prev Button */}
             {selectedIndex !== null && (
@@ -1115,8 +1130,15 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                 }
               }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
+              ref={videoContainerRef} className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
             >
+              <motion.button 
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto text-white hover:text-amber-500 z-[250] p-2 bg-black/50 rounded-full shadow-lg"
+              >
+                <X className="w-8 h-8" />
+              </motion.button>
               {selectedWork.videoUrl ? (
                 isYoutube(selectedWork.videoUrl) ? (
                   <iframe 
@@ -1136,7 +1158,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                   />
                 )
               ) : (
-                <img src={selectedWork.img} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title}  loading="lazy" />
+                <img src={getOptimizedImageUrl(selectedWork.img)} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title}  loading="lazy" />
               )}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none">
                 <div className="transform translate-y-0">
@@ -1197,7 +1219,8 @@ const FAQ = () => {
       </div>
       <div className="max-w-3xl mx-auto space-y-3 px-4">
         {faqs.map((faq, i) => (
-          <details key={i} className="group glass-card overflow-hidden transition-all duration-500 open:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-amber-500/30 rounded-xl">
+          <ScrollReveal key={i} delay={i * 0.1}>
+          <details className="group glass-card overflow-hidden transition-all duration-500 open:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-amber-500/30 rounded-xl">
             <summary className="flex items-center justify-between py-3 px-4 sm:px-6 cursor-pointer list-none">
               <span className="text-sm md:text-base font-bold whitespace-nowrap overflow-hidden overflow-ellipsis rtl:ml-4 ltr:mr-4">{faq.q}</span>
               <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center flex-shrink-0 group-open:bg-amber-500 group-open:text-black transition-all duration-500">
@@ -1214,6 +1237,7 @@ const FAQ = () => {
               </motion.div>
             </div>
           </details>
+          </ScrollReveal>
         ))}
       </div>
     </SectionWrapper>
@@ -1312,7 +1336,7 @@ const Partners = ({ partners = [] }: { partners?: Partner[] }) => {
               </div>
               
               <img 
-                src={p.logo} 
+                src={getOptimizedImageUrl(p.logo)} 
                 alt={p.name} 
                 className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover/card:scale-110" 
                loading="lazy" />
@@ -1710,7 +1734,7 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-12 mb-16">
           <div className="mb-4 md:mb-0">
             <a href="#home" className="flex items-center gap-2 mb-6">
-              <img src="https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png" alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
+              <img src={getOptimizedImageUrl("https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png")} alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
             </a>
             <p className="text-black/60 dark:text-white/60 mb-6 leading-relaxed">
               {t("footer.companyDesc")}
