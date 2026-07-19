@@ -187,3 +187,8 @@
 .animate-gradient-x {
   animation: gradient-x 3s ease infinite;
 }
+
+.animate-marquee-slow {
+  animation: marquee 45s linear infinite;
+  display: flex;
+}

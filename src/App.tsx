@@ -203,7 +203,7 @@ const HoverLinkGroup = ({ links, className = "space-y-4", id = "group" }: { link
     <ul className={`relative z-20 ${className}`} onMouseLeave={() => setHoveredIndex(null)}>
       {links.map((link, idx) => (
         <li key={idx} className="relative z-10" onMouseEnter={() => setHoveredIndex(idx)}>
-          <a href={link.href} className="relative z-10 block px-4 py-2 font-bold text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors duration-300 cursor-pointer pointer-events-auto">
+          <a href={link.href} className="relative z-10 block px-4 py-2 font-bold text-black/80 dark:text-white/90 hover:text-black dark:hover:text-white transition-colors duration-300 cursor-pointer pointer-events-auto">
             {link.label}
           </a>
           {hoveredIndex === idx && (
@@ -546,17 +546,21 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
 
   // If videoUrl is provided from config, use it. Otherwise use a fallback image.
   // The user requested to use the custom webm video natively.
-  const isYoutube = videoUrl?.includes('youtube.com') || videoUrl?.includes('youtu.be') || videoUrl?.includes('drive.google.com');
+  const isYoutube = videoUrl?.includes('youtube.com') || videoUrl?.includes('youtu.be');
   
-  const getYoutubeEmbedUrl = (url: string) => {
+  const getDirectVideoUrl = (url: string) => {
     if (!url) return '';
     if (url.includes('drive.google.com')) {
       const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
       if (match) {
-        return `https://drive.google.com/file/d/${match[1]}/preview?autoplay=1`;
+        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
       }
-      return url;
     }
+    return url;
+  };
+
+  const getYoutubeEmbedUrl = (url: string) => {
+    if (!url) return '';
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     if (match && match[2].length === 11) {
@@ -596,8 +600,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
               >
                 {videoUrl && (
                   <>
-                    <source src={videoUrl} type="video/quicktime" />
-                    <source src={videoUrl} type="video/mp4" />
+                    <source src={getDirectVideoUrl(videoUrl)} type="video/mp4" />
                     متصفحك لا يدعم تشغيل الفيديو.
                   </>
                 )}
@@ -709,21 +712,21 @@ const StatsSection = () => {
                 <div className="text-3xl sm:text-4xl md:text-8xl font-black text-gradient mb-2 md:mb-4 drop-shadow-[0_0_20px_rgba(255,138,0,0.3)]">
                   <Counter value={348} />
                 </div>
-                <div className="text-[10px] md:text-lg text-black/50 dark:text-white/50 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.events")}</div>
+                <div className="text-[10px] md:text-lg text-black/70 dark:text-white/80 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.events")}</div>
               </div>
               
               <div className="flex flex-col items-center text-center border-x border-black/10 dark:border-white/10 px-2 md:px-0">
                 <div className="text-3xl sm:text-4xl md:text-8xl font-black text-gradient mb-2 md:mb-4 drop-shadow-[0_0_20px_rgba(255,138,0,0.3)]">
                   <Counter value={8} />
                 </div>
-                <div className="text-[10px] md:text-lg text-black/50 dark:text-white/50 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.years")}</div>
+                <div className="text-[10px] md:text-lg text-black/70 dark:text-white/80 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.years")}</div>
               </div>
               
               <div className="flex flex-col items-center text-center">
                 <div className="text-3xl sm:text-4xl md:text-8xl font-black text-gradient mb-2 md:mb-4 drop-shadow-[0_0_20px_rgba(255,138,0,0.3)]">
                   <Counter value={98} suffix="%" />
                 </div>
-                <div className="text-[10px] md:text-lg text-black/50 dark:text-white/50 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.clients")}</div>
+                <div className="text-[10px] md:text-lg text-black/70 dark:text-white/80 uppercase tracking-wider md:tracking-[0.3em] font-black leading-tight">{t("stats.clients")}</div>
               </div>
             </div>
           </div>
@@ -769,7 +772,7 @@ const Services = ({ services }: { services: Service[] }) => {
     <SectionWrapper id="services" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
       <div className="text-center mb-12 md:mb-20">
         <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 md:mb-8 title-accent-center heading-gradient truncate w-full max-w-full block">{t("services.title")}</h2>
-        <p className="text-black/50 dark:text-white/50 max-w-[70ch] mx-auto text-base md:text-[18px] font-normal px-4">
+        <p className="text-black/70 dark:text-white/80 max-w-[70ch] mx-auto text-lg md:text-xl font-medium font-normal px-4">
           {t("services.subtitle")}
         </p>
       </div>
@@ -862,12 +865,32 @@ const Services = ({ services }: { services: Service[] }) => {
                 <X className="w-6 h-6" />
               </button>
               
-              <iframe
-                src={selectedVideo}
-                className="w-full h-full pointer-events-auto"
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              {(() => {
+                const isYt = selectedVideo.includes('youtube.com') || selectedVideo.includes('youtu.be');
+                const isDrive = selectedVideo.includes('drive.google.com');
+                let src = selectedVideo;
+                if (isDrive) {
+                  const match = selectedVideo.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                  if (match) src = `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                }
+                
+                return isYt ? (
+                  <iframe
+                    src={selectedVideo}
+                    className="w-full h-full pointer-events-auto"
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <video
+                    src={src}
+                    autoPlay
+                    controls
+                    playsInline
+                    className="w-full h-full object-contain pointer-events-auto"
+                  ></video>
+                );
+              })()}
             </motion.div>
           </div>
         )}
@@ -896,7 +919,7 @@ const PortfolioMediaContent = ({ w, isYoutube, getYoutubeEmbedUrl, selectedWork 
           ></iframe>
         ) : (
           <video 
-            src={w.videoUrl} 
+            src={getDirectVideoUrl(w.videoUrl!)} 
             autoPlay 
             muted 
             loop 
@@ -1022,7 +1045,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
           <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 title-accent heading-gradient truncate w-full max-w-full block">{t('portfolio.title')}</h2>
-          <p className="text-black/50 dark:text-white/50 max-w-[60ch] text-[18px] font-normal">
+          <p className="text-black/70 dark:text-white/80 max-w-[60ch] text-lg md:text-xl font-medium font-normal">
             {t('portfolio.subtitle')}
           </p>
         </div>
@@ -1149,7 +1172,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                   ></iframe>
                 ) : (
                   <video 
-                    src={selectedWork.videoUrl} 
+                    src={getDirectVideoUrl(selectedWork.videoUrl!)} 
                     autoPlay 
                     controls 
                     playsInline
@@ -1215,7 +1238,7 @@ const FAQ = () => {
       })}} />
       <div className="text-center mb-16">
         <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 title-accent-center heading-gradient truncate w-full max-w-full block">{t("nav.faq")}</h2>
-        <p className="text-black/50 dark:text-white/50 max-w-[70ch] mx-auto text-[16px] md:text-[18px] font-normal">{t('faq.subtitle')}</p>
+        <p className="text-black/70 dark:text-white/80 max-w-[70ch] mx-auto text-lg md:text-xl font-medium font-normal">{t('faq.subtitle')}</p>
       </div>
       <div className="max-w-3xl mx-auto space-y-3 px-4">
         {faqs.map((faq, i) => (
@@ -1266,7 +1289,7 @@ const Process = () => {
       <div className="text-center mb-16 md:mb-20">
         <ScrollReveal>
           <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 md:mb-8 title-accent-center heading-gradient truncate w-full max-w-full block">{t("process.title")}</h2>
-          <p className="text-black/50 dark:text-white/50 max-w-[70ch] mx-auto text-base md:text-[18px]">{t('process.stepsDesc')}</p>
+          <p className="text-black/70 dark:text-white/80 max-w-[70ch] mx-auto text-lg md:text-xl font-medium">{t('process.stepsDesc')}</p>
         </ScrollReveal>
       </div>
       <div className="relative max-w-5xl mx-auto px-4">
@@ -1291,7 +1314,7 @@ const Process = () => {
                 {step.num}
               </motion.div>
               <h3 className="text-xs sm:text-sm md:text-xl font-bold mb-1 md:mb-3 text-black dark:text-white leading-tight">{step.title}</h3>
-              <p className="text-[10px] sm:text-xs md:text-base text-black/60 dark:text-white/60 hidden sm:block">{step.desc}</p>
+              <p className="text-[10px] sm:text-xs md:text-base text-black/80 dark:text-white/90 hidden sm:block">{step.desc}</p>
             </ScrollReveal>
           ))}
         </div>
@@ -1304,6 +1327,8 @@ const Process = () => {
 
 const Partners = ({ partners = [] }: { partners?: Partner[] }) => {
   const { t, language } = useLanguage();
+  const [isHovered, setIsHovered] = useState(false);
+  const [justLeft, setJustLeft] = useState(false);
   if (!partners || partners.length === 0) return null;
 
   return (
@@ -1311,20 +1336,33 @@ const Partners = ({ partners = [] }: { partners?: Partner[] }) => {
       <div className="max-w-7xl mx-auto px-6 mb-12">
         <ScrollReveal>
           <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold title-accent-center heading-gradient mb-4 truncate w-full max-w-full block text-black dark:text-white">{t("partners.title")}</h2>
-          <p className="text-center text-black/50 dark:text-white/50">{t('partners.trustDesc')}</p>
+          <p className="text-center text-black/70 dark:text-white/80">{t('partners.trustDesc')}</p>
         </ScrollReveal>
       </div>
-      <div className="relative w-full overflow-hidden flex bg-transparent py-12 group" dir="ltr">
+      <div 
+        className="relative w-full overflow-hidden flex bg-transparent py-12" 
+        dir="ltr"
+        onMouseEnter={() => {
+          setIsHovered(true);
+          setJustLeft(false);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          setJustLeft(true);
+          setTimeout(() => setJustLeft(false), 500);
+        }}
+      >
         {/* Animated gradient fade at the edges for smoothness */}
         <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-r from-white dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
         <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-48 bg-gradient-to-l from-white dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
         
-        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] py-4">
-          {[...partners, ...partners, ...partners].map((p, index) => (
-            <div 
-              key={index} 
-              className="group/card relative mx-3 sm:mx-6 w-32 sm:w-64 h-20 sm:h-36 rounded-2xl flex items-center justify-center transition-all duration-500 cursor-pointer select-none bg-white dark:bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(255,138,0,0.15)] hover:-translate-y-2 overflow-hidden"
-            >
+        <div className={`transition-transform duration-500 ease-in-out ${justLeft ? 'translate-x-4' : 'translate-x-0'}`}>
+          <div className={`flex w-max ${isHovered || justLeft ? '[animation-play-state:paused]' : '[animation-play-state:running]'} animate-marquee-slow py-4`}>
+            {[...partners, ...partners, ...partners].map((p, index) => (
+              <div 
+                key={index} 
+                className="group/card relative mx-3 sm:mx-6 w-32 sm:w-64 h-20 sm:h-36 rounded-2xl flex items-center justify-center transition-all duration-500 cursor-pointer select-none bg-white dark:bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_30px_50px_rgba(255,138,0,0.2)] hover:scale-110 hover:-translate-y-4 hover:z-50 overflow-hidden"
+              >
               {/* 3D Border Effects */}
               <div className="absolute inset-0 rounded-2xl border-t border-l border-white/80 dark:border-white/10 pointer-events-none transition-colors duration-500 group-hover/card:border-amber-500/30"></div>
               <div className="absolute inset-0 rounded-2xl border-b-2 border-r-2 border-black/5 dark:border-black/40 pointer-events-none transition-colors duration-500 group-hover/card:border-amber-500/20"></div>
@@ -1342,6 +1380,7 @@ const Partners = ({ partners = [] }: { partners?: Partner[] }) => {
                loading="lazy" />
             </div>
           ))}
+        </div>
         </div>
       </div>
     </SectionWrapper>
@@ -1472,7 +1511,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any, key?: React.Key | 
         </div>
         <div className="overflow-hidden">
           <h4 className="font-bold text-black dark:text-white text-[10px] sm:text-xs md:text-sm truncate">{testimonial.name}</h4>
-          <p className="text-black/50 dark:text-white/50 text-[8px] sm:text-[10px] md:text-xs truncate">{testimonial.role}</p>
+          <p className="text-black/70 dark:text-white/80 text-[8px] sm:text-[10px] md:text-xs truncate">{testimonial.role}</p>
         </div>
       </div>
     </div>
@@ -1503,12 +1542,12 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
         <ScrollReveal>
           <AnimatedTitle text={t("testimonials.title")} className="text-2xl sm:text-3xl md:text-[40px] font-semibold title-accent-center heading-gradient mb-4 truncate w-full max-w-full" />
-          <p className="text-black/50 dark:text-white/50 text-lg mx-auto text-center">{t('testimonials.subtitle')}</p>
+          <p className="text-black/70 dark:text-white/80 text-lg mx-auto text-center">{t('testimonials.subtitle')}</p>
         </ScrollReveal>
       </div>
 
       <div className="relative w-full overflow-hidden flex bg-transparent py-4 group" dir="ltr">
-        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] py-2">
+        <div className="flex w-max animate-marquee-slow group-hover:[animation-play-state:paused] py-2">
           {[...testimonials, ...testimonials, ...testimonials].map((t, index) => (
             <div key={index} className="mx-2 sm:mx-4 w-[85vw] sm:w-[50vw] md:w-[40vw] lg:w-[35vw]" dir={language === 'ar' ? 'rtl' : 'ltr'}>
               <TestimonialCard testimonial={t} />
@@ -1614,7 +1653,7 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <ScrollReveal>
             <h2 className="text-2xl sm:text-3xl md:text-[40px] font-semibold mb-6 md:mb-8 title-accent heading-gradient truncate w-full max-w-full block">{t("contact.title")}</h2>
-            <p className="text-black/60 dark:text-white/60 mb-12 text-base md:text-lg">{t('contact.formDesc')}</p>
+            <p className="text-black/80 dark:text-white/90 mb-12 text-base md:text-lg">{t('contact.formDesc')}</p>
             
             <div className="space-y-8">
               <div className="flex items-start gap-4">
@@ -1623,7 +1662,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-black dark:text-white mb-1">{t('contact.phone')}</h4>
-                  <p className="text-black/60 dark:text-white/60" dir="ltr">053 675 3679</p>
+                  <p className="text-black/80 dark:text-white/90" dir="ltr">053 675 3679</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -1632,7 +1671,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-black dark:text-white mb-1">{t("quote.email")}</h4>
-                  <p className="text-black/60 dark:text-white/60">Hello@eventliveksa.com</p>
+                  <p className="text-black/80 dark:text-white/90">Hello@eventliveksa.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -1641,7 +1680,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-black dark:text-white mb-1">{t('contact.location')}</h4>
-                  <p className="text-black/60 dark:text-white/60">{t('contact.locationDesc')}</p>
+                  <p className="text-black/80 dark:text-white/90">{t('contact.locationDesc')}</p>
                 </div>
               </div>
             </div>
@@ -1692,7 +1731,7 @@ const Contact = () => {
               <div className="relative">
                 <label className="block text-sm font-bold text-black/80 dark:text-white/80 mb-2 flex items-center justify-between">
                   <span>{t('contact.detailsLabel')}</span>
-                  <button type="button" onClick={startListening} className={`text-xs flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${isListening ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-black/5 dark:bg-white/10 text-black/60 dark:text-white/60 hover:text-amber-500'}`} title={t("contact.dictationHint")}>
+                  <button type="button" onClick={startListening} className={`text-xs flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${isListening ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-black/5 dark:bg-white/10 text-black/80 dark:text-white/90 hover:text-amber-500'}`} title={t("contact.dictationHint")}>
                     <Mic className="w-3 h-3" />
                     {isListening ? t("contact.dictationListening") : t("contact.dictationBtn")}
                   </button>
@@ -1716,6 +1755,8 @@ const Contact = () => {
 const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
   const { t, language } = useLanguage();
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? null : section);
@@ -1736,7 +1777,7 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
             <a href="#home" className="flex items-center gap-2 mb-6">
               <img src={getOptimizedImageUrl("https://res.cloudinary.com/ozd726ro/image/upload/f_auto,q_auto,w_1080/v1784025230/74dbadce-8a3f-4270-b985-83a0cad432e1.png")} alt="EventLive" className="h-12 object-contain drop-shadow-[0_0_15px_rgba(255,138,0,0.3)]"  loading="lazy" />
             </a>
-            <p className="text-black/60 dark:text-white/60 mb-6 leading-relaxed">
+            <p className="text-black/80 dark:text-white/90 mb-6 leading-relaxed">
               {t("footer.companyDesc")}
             </p>
           </div>
@@ -1788,13 +1829,13 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
             
             <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === 'contact' ? 'max-h-96' : 'max-h-0 md:max-h-full'}`}>
               <div className="flex flex-col gap-4 mb-6">
-                <a href="tel:0536753679" className="flex items-center gap-3 text-black/60 dark:text-white/60 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
+                <a href="tel:0536753679" className="flex items-center gap-3 text-black/80 dark:text-white/90 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
                   <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-amber-500">
                     <Phone className="w-4 h-4" />
                   </div>
                   <span className="font-medium text-sm" dir="ltr">0536753679</span>
                 </a>
-                <a href="mailto:Hello@eventliveksa.com" className="flex items-center gap-3 text-black/60 dark:text-white/60 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
+                <a href="mailto:Hello@eventliveksa.com" className="flex items-center gap-3 text-black/80 dark:text-white/90 hover:text-amber-500 transition-colors relative z-10 pointer-events-auto">
                   <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-amber-500">
                     <Mail className="w-4 h-4" />
                   </div>
@@ -1838,10 +1879,54 @@ const Footer = ({ socialLinks }: { socialLinks: SocialLink[] }) => {
         <div className="border-t border-black/5 dark:border-white/5 pt-8 flex flex-col items-center gap-4 text-sm text-black/40 dark:text-white/40">
           <div className="flex flex-col md:flex-row w-full items-center justify-between gap-4">
             <p>© {new Date().getFullYear()} EventLive KSA. {t("footer.rights")}</p>
-            <div className="flex gap-4">
-              <a href="#" className="hover:text-amber-500 transition-colors">{t("footer.terms")}</a>
-              <a href="#" className="hover:text-amber-500 transition-colors">{t("footer.privacy")}</a>
+            <div className="flex gap-4 items-center">
+              <a href="https://eventliveksa.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors">eventliveksa.com</a>
+              <span className="text-black/20 dark:text-white/20">|</span>
+              <button onClick={(e) => { e.preventDefault(); setIsTermsOpen(true); }} className="hover:text-amber-500 transition-colors">{t("footer.terms")}</button>
+              <span className="text-black/20 dark:text-white/20">|</span>
+              <button onClick={(e) => { e.preventDefault(); setIsPrivacyOpen(true); }} className="hover:text-amber-500 transition-colors">{t("footer.privacy")}</button>
             </div>
+            
+            <AnimatePresence>
+              {isTermsOpen && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsTermsOpen(false)} />
+                  <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-white dark:bg-[#111] rounded-2xl shadow-2xl p-6 sm:p-10 border border-black/10 dark:border-white/10 text-right md:text-right ltr:text-left">
+                    <button onClick={() => setIsTermsOpen(false)} className="absolute top-4 rtl:left-4 ltr:right-4 rtl:right-auto text-black/70 dark:text-white/80 hover:text-amber-500 transition-colors bg-black/5 dark:bg-white/5 p-2 rounded-full">
+                      <X className="w-5 h-5" />
+                    </button>
+                    <h2 className="text-2xl font-bold mb-6 text-black dark:text-white">{t("footer.terms")}</h2>
+                    <div className="space-y-4 text-black/70 dark:text-white/70 text-sm md:text-base leading-relaxed">
+                      <p><strong>1. قبول الشروط:</strong> باستخدامك لخدمات EventLive KSA، فإنك توافق على الالتزام بهذه الشروط والأحكام.</p>
+                      <p><strong>2. الخدمات:</strong> نقدم خدمات التصوير الفوتوغرافي والفيديو والبث المباشر للفعاليات والمؤتمرات وفقاً لما يتم الاتفاق عليه في عقد الخدمة.</p>
+                      <p><strong>3. الدفع والتسعير:</strong> يتم تحديد الأسعار بناءً على متطلبات كل فعالية. يتم دفع عربون لتأكيد الحجز والمبلغ المتبقي قبل تسليم المواد النهائية.</p>
+                      <p><strong>4. الملكية الفكرية:</strong> تحتفظ EventLive KSA بحقوق الطبع والنشر للمواد المنتجة ما لم يتم الاتفاق على غير ذلك كتابياً. يحق للعميل استخدام المواد للأغراض المتفق عليها.</p>
+                      <p><strong>5. الإلغاء والتعديل:</strong> في حال إلغاء الحجز من قبل العميل قبل موعد الفعالية بفترة قصيرة، قد يتم خصم العربون وفقاً لسياسة الإلغاء الخاصة بنا.</p>
+                      <p><strong>6. إخلاء المسؤولية:</strong> نبذل قصارى جهدنا لتقديم أفضل جودة، ولكننا لا نتحمل المسؤولية عن أي ظروف قاهرة خارجة عن إرادتنا (مثل انقطاع التيار الكهربائي في موقع الفعالية).</p>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+              {isPrivacyOpen && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsPrivacyOpen(false)} />
+                  <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-white dark:bg-[#111] rounded-2xl shadow-2xl p-6 sm:p-10 border border-black/10 dark:border-white/10 text-right md:text-right ltr:text-left">
+                    <button onClick={() => setIsPrivacyOpen(false)} className="absolute top-4 rtl:left-4 ltr:right-4 rtl:right-auto text-black/70 dark:text-white/80 hover:text-amber-500 transition-colors bg-black/5 dark:bg-white/5 p-2 rounded-full">
+                      <X className="w-5 h-5" />
+                    </button>
+                    <h2 className="text-2xl font-bold mb-6 text-black dark:text-white">{t("footer.privacy")}</h2>
+                    <div className="space-y-4 text-black/70 dark:text-white/70 text-sm md:text-base leading-relaxed">
+                      <p><strong>1. جمع المعلومات:</strong> نقوم بجمع المعلومات الشخصية التي تقدمها لنا طواعية عند التواصل معنا أو طلب خدماتنا، مثل الاسم، رقم الهاتف، وعنوان البريد الإلكتروني.</p>
+                      <p><strong>2. استخدام المعلومات:</strong> نستخدم معلوماتك لتوفير الخدمات المطلوبة، التواصل معك بخصوص حجوزاتك، وتحسين مستوى خدمتنا.</p>
+                      <p><strong>3. حماية المعلومات:</strong> نحن نتخذ إجراءات أمنية مناسبة لحماية معلوماتك الشخصية من الوصول غير المصرح به أو التعديل أو الكشف عنها.</p>
+                      <p><strong>4. مشاركة المعلومات:</strong> لا نقوم ببيع أو تأجير معلوماتك الشخصية لأطراف ثالثة. قد نشارك معلوماتك فقط مع مزودي الخدمات الذين يساعدوننا في تشغيل أعمالنا (مثل خدمات التخزين السحابي) تحت شروط سرية صارمة.</p>
+                      <p><strong>5. استخدام الصور والفيديو:</strong> قد نستخدم مقتطفات من الأعمال التي قمنا بتصويرها في معرض أعمالنا أو على حساباتنا في وسائل التواصل الاجتماعي لأغراض ترويجية، ما لم يطلب العميل كتابياً عدم القيام بذلك.</p>
+                      <p><strong>6. التعديلات:</strong> نحتفظ بالحق في تحديث سياسة الخصوصية هذه من وقت لآخر.</p>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
           </div>
           <div className="mt-4 pb-4 w-full flex justify-center border-t border-black/5 dark:border-white/5 pt-6">
              <p className="text-xs text-black/40 dark:text-white/40 flex items-center gap-1">
@@ -1908,14 +1993,14 @@ const AdminPage = ({ data, onSave, onClose }: { data: AppData, onSave: (data: Ap
           <h2 className="text-2xl font-bold flex items-center gap-2 text-black dark:text-white"><Settings className="w-6 h-6" /> لوحة التحكم</h2>
           <div className="flex gap-4">
             <button onClick={() => onSave(localData)} className="px-6 py-2 bg-amber-500 text-black font-bold rounded-lg hover:bg-amber-400 transition-colors">حفظ التغييرات</button>
-            <button onClick={onClose} className="p-2 text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 rounded-lg"><X className="w-5 h-5" /></button>
+            <button onClick={onClose} className="p-2 text-black/70 dark:text-white/80 hover:text-black dark:hover:text-white bg-black/5 dark:bg-white/5 rounded-lg"><X className="w-5 h-5" /></button>
           </div>
         </div>
         
         <div className="flex flex-1 overflow-hidden">
           <div className="w-64 bg-gray-50 dark:bg-[#0a0a0a] border-l border-black/10 dark:border-white/10 p-4 flex flex-col gap-2 overflow-y-auto">
             {['services', 'portfolio', 'social', 'hero', 'partners'].map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)} className={`text-start px-4 py-3 rounded-lg font-bold transition-colors ${activeTab === tab ? 'bg-amber-500 text-black' : 'text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5'}`}>
+              <button key={tab} onClick={() => setActiveTab(tab)} className={`text-start px-4 py-3 rounded-lg font-bold transition-colors ${activeTab === tab ? 'bg-amber-500 text-black' : 'text-black/80 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5'}`}>
                 {tab === 'services' && 'الخدمات'}
                 {tab === 'portfolio' && 'الأعمال'}
                 {tab === 'social' && 'التواصل الاجتماعي'}
@@ -1983,7 +2068,7 @@ const AdminPage = ({ data, onSave, onClose }: { data: AppData, onSave: (data: Ap
               <div className="space-y-4">
                 {localData.socialLinks.map(link => (
                   <div key={link.platform} className="flex items-center gap-4 bg-gray-50 dark:bg-[#222] p-4 rounded-xl border border-black/5 dark:border-white/5">
-                    <div className="w-24 capitalize font-bold text-black/50 dark:text-white/50">{link.platform}</div>
+                    <div className="w-24 capitalize font-bold text-black/70 dark:text-white/80">{link.platform}</div>
                     <input type="text" value={link.url} onChange={(e) => handleUpdateSocial(link.platform, e.target.value)} className="flex-1 bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-lg px-4 py-2" dir="ltr" placeholder="https://..." />
                   </div>
                 ))}
@@ -2171,11 +2256,11 @@ const QuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
         className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-8 w-full max-w-xl shadow-2xl relative overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <button onClick={onClose} className="absolute top-6 rtl:left-6 ltr:right-6 text-black/50 dark:text-white/50 hover:text-amber-500 transition-colors bg-black/5 dark:bg-white/5 p-2 rounded-full">
+        <button onClick={onClose} className="absolute top-6 rtl:left-6 ltr:right-6 text-black/70 dark:text-white/80 hover:text-amber-500 transition-colors bg-black/5 dark:bg-white/5 p-2 rounded-full">
           <X className="w-5 h-5" />
         </button>
         <h2 className="text-3xl font-black mb-2 text-black dark:text-white">{t("quote.title")}</h2>
-        <p className="text-black/60 dark:text-white/60 mb-8">{t("quote.subtitle")}</p>
+        <p className="text-black/80 dark:text-white/90 mb-8">{t("quote.subtitle")}</p>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
@@ -2199,10 +2284,10 @@ const QuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
               <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.clientType")}</label>
               <div className="relative">
                 <select name="clientType" value={formData.clientType} onChange={handleChange} className={`w-full appearance-none bg-black/5 dark:bg-[#222] border ${errors.clientType ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`}>
-                  <option value="" className="text-black/50 dark:text-white/50 bg-white dark:bg-[#222]">{t("quote.selectClientType")}</option>
+                  <option value="" className="text-black/70 dark:text-white/80 bg-white dark:bg-[#222]">{t("quote.selectClientType")}</option>
                   {clientTypes.map((type, i) => <option key={i} value={type.name} className="bg-white dark:bg-[#222] text-black dark:text-white">{type.name}</option>)}
                 </select>
-                <ChevronDown className="w-5 h-5 absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50 pointer-events-none" />
+                <ChevronDown className="w-5 h-5 absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-black/70 dark:text-white/80 pointer-events-none" />
               </div>
               {errors.clientType && <p className="text-red-500 text-xs mt-1">{errors.clientType}</p>}
             </div>
@@ -2210,10 +2295,10 @@ const QuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
               <label className="block text-sm font-bold mb-2 text-black/80 dark:text-white/80">{t("quote.eventType")}</label>
               <div className="relative">
                 <select name="eventType" value={formData.eventType} onChange={handleChange} className={`w-full appearance-none bg-black/5 dark:bg-[#222] border ${errors.eventType ? 'border-red-500' : 'border-black/10 dark:border-white/10'} rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 transition-colors text-black dark:text-white`}>
-                  <option value="" className="text-black/50 dark:text-white/50 bg-white dark:bg-[#222]">{t("quote.selectEventType")}</option>
+                  <option value="" className="text-black/70 dark:text-white/80 bg-white dark:bg-[#222]">{t("quote.selectEventType")}</option>
                   {eventTypes.map((type, i) => <option key={i} value={type.name} className="bg-white dark:bg-[#222] text-black dark:text-white">{type.name}</option>)}
                 </select>
-                <ChevronDown className="w-5 h-5 absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50 pointer-events-none" />
+                <ChevronDown className="w-5 h-5 absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-black/70 dark:text-white/80 pointer-events-none" />
               </div>
               {errors.eventType && <p className="text-red-500 text-xs mt-1">{errors.eventType}</p>}
             </div>
@@ -2225,7 +2310,7 @@ const QuoteModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
               <button 
                 type="button"
                 onClick={toggleListening}
-                className={`p-2 rounded-full flex items-center justify-center transition-colors ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/60 hover:text-amber-500 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                className={`p-2 rounded-full flex items-center justify-center transition-colors ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/90 hover:text-amber-500 hover:bg-black/10 dark:hover:bg-white/10'}`}
                 title={language === 'ar' ? 'تحدث لإضافة ملاحظات' : 'Speak to add notes'}
               >
                 <Mic className="w-4 h-4" />
@@ -2390,7 +2475,7 @@ const MapReviewsOverlay = () => {
           <p className="text-black/80 dark:text-white/80 text-xs md:text-sm font-medium mb-1.5 leading-relaxed" dir="rtl">
             "{mockReviews[currentIndex].text}"
           </p>
-          <span className="text-[10px] text-black/50 dark:text-white/50 font-bold block">
+          <span className="text-[10px] text-black/70 dark:text-white/80 font-bold block">
             {mockReviews[currentIndex].author} - عبر جوجل ماب
           </span>
         </motion.div>
@@ -2406,7 +2491,7 @@ const MapSection = () => {
         <ScrollReveal>
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-bold heading-gradient title-accent-center mb-6">حياكم</h2>
-            <p className="text-black/60 dark:text-white/60 max-w-2xl mx-auto text-lg">نسعد بزيارتكم لنا في مقرنا</p>
+            <p className="text-black/80 dark:text-white/90 max-w-2xl mx-auto text-lg">نسعد بزيارتكم لنا في مقرنا</p>
           </div>
         </ScrollReveal>
         <ScrollReveal className="delay-100">
