@@ -49,6 +49,45 @@ export const getVideoEmbedUrl = (url?: string, autoplay = true) => {
 };
 
 
+
+export const SwipeHint = ({ customText }: { customText?: string; key?: string | number }) => {
+  const { language } = useLanguage();
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 3200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -10, scale: 0.9 }}
+      transition={{ duration: 0.3 }}
+      className="absolute top-14 sm:top-20 left-1/2 -translate-x-1/2 z-[280] pointer-events-none px-4 w-full max-w-xs sm:max-w-md flex justify-center"
+    >
+      <div className="flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-black/85 backdrop-blur-xl border border-amber-500/60 text-white shadow-[0_0_30px_rgba(255,138,0,0.5)] text-xs sm:text-sm font-bold tracking-wide">
+        <motion.div
+          animate={{ x: [-8, 8, -8] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+          className="text-amber-400 flex items-center gap-1 text-base sm:text-lg flex-shrink-0"
+        >
+          <span>👈</span>
+          <span className="text-xs">👉</span>
+        </motion.div>
+        <span className="text-white drop-shadow whitespace-nowrap">
+          {customText || (language === 'ar' ? 'اسحب لليمين أو اليسار للتنقل بين المقاطع' : 'Swipe left or right to navigate')}
+        </span>
+      </div>
+    </motion.div>
+  );
+};
+
 export const getOptimizedImageUrl = (url?: string) => {
   if (!url) return "";
   if (url.includes("cloudinary.com") && !url.includes("f_auto") && !url.includes("q_auto")) {
@@ -657,7 +696,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-4xl"
-        >
+         style={{'height': '290.5px', 'width': '325px', 'paddingTop': '-3px', 'paddingLeft': '0px', 'marginLeft': '-3px', 'marginRight': '2px', 'marginTop': '213px'}} >
 
 
           <motion.div 
@@ -665,7 +704,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
             className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/20 text-amber-500 md:text-amber-400 font-black mb-8"
-            style={{ fontSize: '10px' }}
+            style={{fontSize: '10px', 'paddingBottom': '7px', 'paddingTop': '7px', 'paddingLeft': '23px', 'paddingRight': '22px', 'marginRight': '-3px', 'marginLeft': '2px', 'marginBottom': '-2px', 'marginTop': '4px'}}
           >
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
             {t('hero.badge')}
@@ -673,13 +712,13 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
           
           <CustomHeroSequence />
           
-          <div className="flex flex-wrap gap-4 md:gap-6 relative z-10 mt-6">
+          <div className="flex flex-wrap gap-4 md:gap-6 relative z-10 mt-6" style={{'height': '101px', 'width': '219px', 'paddingBottom': '-2px', 'paddingTop': '-3px', 'paddingLeft': '-12px', 'paddingRight': '30px', 'marginLeft': '20px', 'marginTop': '44px', 'marginRight': '0px'}} >
             <motion.button 
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255,138,0,0.5)" }}
               whileTap={{ scale: 0.95 }}
               onClick={onQuoteClick} 
               className="btn-primary text-base md:text-lg px-8 py-4 md:px-10 md:py-5 relative w-full sm:w-auto"
-            >
+             style={{'marginRight': '-19px', 'paddingBottom': '-4px', 'paddingRight': '73px', 'paddingTop': '-13px', 'paddingLeft': '32px', 'lineHeight': '19px', 'width': '215px', 'textAlign': 'right', 'marginLeft': '-11px', 'height': '40px', 'marginBottom': '-43px', 'marginTop': '1px', 'borderRadius': '20.67772px', 'fontSize': '14px'}} >
               {t('hero.cta')}
             </motion.button>
             <motion.button 
@@ -687,7 +726,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
               whileTap={{ scale: 0.95 }}
               onClick={() => document.getElementById('portfolio')?.scrollIntoView()} 
               className="btn-glass text-base md:text-lg px-8 py-4 md:px-10 md:py-5 w-full sm:w-auto text-center"
-            >
+             style={{'width': '228px', 'height': '32px', 'marginLeft': '-8px', 'marginTop': '6px', 'marginBottom': '3px', 'marginRight': '-7px', 'paddingBottom': '9px', 'paddingTop': '3px'}} >
               {t('hero.portfolio')}
             </motion.button>
           </div>
@@ -749,7 +788,7 @@ const StatsSection = () => {
 const Services = ({ services }: { services: Service[] }) => {
   const { t, language } = useLanguage();
   const [tick, setTick] = useState(0);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedServiceIndex, setSelectedServiceIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -757,6 +796,22 @@ const Services = ({ services }: { services: Service[] }) => {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const getServiceVideoUrl = (s: Service) => {
+    if (s.mediaValue && s.mediaType === 'video') return s.mediaValue;
+    if (s.id === '1') return 'https://drive.google.com/file/d/1ndvNPiH-WplY1W_IUkJi4LDMUJ-Q7frJ/preview';
+    if (s.id === '2') return 'https://drive.google.com/file/d/1-bKKZ4v6ZxXs9lcDtJBSMGFZApj9oKbE/preview';
+    if (s.id === '3') return 'https://drive.google.com/file/d/1OK5g5z946BAUQvh6JG-KyFmuCUyxVsmm/preview';
+    if (s.id === '4') return 'https://drive.google.com/file/d/1GXt9db_Yl1MIQZhlBwC4qKCdon-kVesp/preview';
+    if (s.id === '5') return 'https://drive.google.com/file/d/1L72tPeWdORgsoZKbJNeCjlBtxFvufnZz/preview';
+    if (s.id === '6') return 'https://drive.google.com/file/d/1kBae6J4Y2ep08Yc7PMDkj88yKyHaii8m/preview';
+    if (s.id === '7') return 'https://drive.google.com/file/d/1fWpWb3THK493zIIatv_u9ayOmUlxS258/preview';
+    if (s.id === '8') return 'https://drive.google.com/file/d/1y9R8BGNJGos64lOYM8hrfQP0ZlYOcPGv/preview';
+    return '';
+  };
+
+  const currentService = selectedServiceIndex !== null ? services[selectedServiceIndex] : null;
+  const currentVideoUrl = currentService ? getServiceVideoUrl(currentService) : '';
 
   const fallbackImages = [
     'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800',
@@ -767,7 +822,6 @@ const Services = ({ services }: { services: Service[] }) => {
     'https://images.unsplash.com/photo-1533174000255-124b17551000?auto=format&fit=crop&q=80&w=800',
   ];
 
-
   return (
     <SectionWrapper id="services" className="bg-white dark:bg-[#0a0a0a] py-12 md:py-16 border-b border-black/5 dark:border-white/5">
       <div className="text-center mb-12 md:mb-20">
@@ -776,13 +830,10 @@ const Services = ({ services }: { services: Service[] }) => {
           {t("services.subtitle")}
         </p>
       </div>
-
       <div className="grid grid-cols-6 gap-2 sm:gap-4 md:gap-8 pb-8 w-full px-2 sm:px-4">
         {services.map((s, i) => {
           const Icon = IconMap[s.iconName] || Layout;
           const spanClass = getGridSpanClass(i, services.length);
-
-
           return (
             <motion.div 
               key={s.id}
@@ -790,17 +841,7 @@ const Services = ({ services }: { services: Service[] }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              onClick={() => {
-                if (s.id === '1') setSelectedVideo('https://drive.google.com/file/d/1ndvNPiH-WplY1W_IUkJi4LDMUJ-Q7frJ/preview');
-                else if (s.id === '2') setSelectedVideo('https://drive.google.com/file/d/1-bKKZ4v6ZxXs9lcDtJBSMGFZApj9oKbE/preview');
-                else if (s.id === '3') setSelectedVideo('https://drive.google.com/file/d/1OK5g5z946BAUQvh6JG-KyFmuCUyxVsmm/preview');
-                else if (s.id === '4') setSelectedVideo('https://drive.google.com/file/d/1GXt9db_Yl1MIQZhlBwC4qKCdon-kVesp/preview');
-                else if (s.id === '5') setSelectedVideo('https://drive.google.com/file/d/1L72tPeWdORgsoZKbJNeCjlBtxFvufnZz/preview');
-                else if (s.id === '6') setSelectedVideo('https://drive.google.com/file/d/1kBae6J4Y2ep08Yc7PMDkj88yKyHaii8m/preview');
-                else if (s.id === '7') setSelectedVideo('https://drive.google.com/file/d/1fWpWb3THK493zIIatv_u9ayOmUlxS258/preview');
-                else if (s.id === '8') setSelectedVideo('https://drive.google.com/file/d/1y9R8BGNJGos64lOYM8hrfQP0ZlYOcPGv/preview');
-              }}
-              
+              onClick={() => setSelectedServiceIndex(i)}
               className={`bg-white dark:bg-[#111] p-5 md:p-8 rounded-[2rem] transition-all duration-500 group cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[160px] sm:min-h-[250px] md:min-h-[350px] flex-shrink-0 w-full shadow-[0_10px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-t border-l border-white/80 dark:border-white/10 border-b-4 border-r-4 border-black/5 dark:border-black/40 hover:-translate-y-2 hover:border-amber-500/30 dark:hover:border-amber-500/30 hover:shadow-[0_20px_40px_rgba(255,138,0,0.15)] ${spanClass}`}
             >
               {s.cardBgImage && (
@@ -808,13 +849,12 @@ const Services = ({ services }: { services: Service[] }) => {
                   <img 
                     src={getOptimizedImageUrl(s.cardBgImage)} 
                     alt={s.title} 
-                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${s.id === '7' ? 'animate-blur-pulse group-hover:blur-none' : 'blur-[8px] group-hover:blur-none'} group-hover:scale-110 z-0 scale-105`}
+                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 z-0 scale-105`}
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500 z-0"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                 </>
               )}
-
               {/* Radial Light Effect */}
               <div className="absolute -top-24 rtl:-right-2 ltr:-left-2 w-48 h-48 bg-amber-500/5 dark:bg-amber-500/10 blur-[80px] rounded-full group-hover:bg-amber-500/10 dark:group-hover:bg-amber-500/20 transition-colors duration-500 z-0"></div>
               
@@ -841,46 +881,137 @@ const Services = ({ services }: { services: Service[] }) => {
         })}
       </div>
       <AnimatePresence>
-        {selectedVideo && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 md:p-12">
+        {selectedServiceIndex !== null && currentService && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-2 sm:p-6 md:p-12" dir={language === 'ar' ? 'rtl' : 'ltr'}>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="absolute inset-0 bg-black/90 backdrop-blur-xl"
-              onClick={() => setSelectedVideo(null)}
+              onClick={() => setSelectedServiceIndex(null)}
             />
             
+            {/* Top-Right Floating Close Button on Overlay */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setSelectedServiceIndex(null); }}
+              className="absolute top-3 right-3 sm:top-5 sm:right-6 z-[350] p-3 sm:p-3.5 bg-black/60 hover:bg-amber-500 hover:text-black text-white border border-white/30 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 active:scale-95 group cursor-pointer flex items-center justify-center"
+              title={language === 'ar' ? 'إغلاق' : 'Close'}
+              aria-label="Close"
+            >
+              <X className="w-6 h-6 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:rotate-90" />
+            </button>
+
+            {/* Swipe Hint Indicator */}
+            <SwipeHint key={`service-hint-${selectedServiceIndex}`} customText={language === 'ar' ? 'اسحب لليمين أو اليسار للتنقل بين الخدمات' : 'Swipe left or right to navigate services'} />
+
+            {/* Prev Button - Always visible on Mobile & Desktop */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const isRtl = language === 'ar';
+                if (isRtl) {
+                  setSelectedServiceIndex(selectedServiceIndex > 0 ? selectedServiceIndex - 1 : services.length - 1);
+                } else {
+                  setSelectedServiceIndex(selectedServiceIndex < services.length - 1 ? selectedServiceIndex + 1 : 0);
+                }
+              }}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/60 hover:bg-amber-500 hover:text-black text-white flex items-center justify-center rounded-full backdrop-blur-md border border-white/20 transition-all z-[250] shadow-2xl active:scale-95 group opacity-85 hover:opacity-100"
+              title={language === 'ar' ? 'السابق' : 'Previous'}
+              aria-label="Previous"
+            >
+              <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 ltr:rotate-0 rtl:rotate-180 transition-transform group-hover:scale-110" />
+            </button>
+
+            {/* Next Button - Always visible on Mobile & Desktop */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const isRtl = language === 'ar';
+                if (isRtl) {
+                  setSelectedServiceIndex(selectedServiceIndex < services.length - 1 ? selectedServiceIndex + 1 : 0);
+                } else {
+                  setSelectedServiceIndex(selectedServiceIndex > 0 ? selectedServiceIndex - 1 : services.length - 1);
+                }
+              }}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/60 hover:bg-amber-500 hover:text-black text-white flex items-center justify-center rounded-full backdrop-blur-md border border-white/20 transition-all z-[250] shadow-2xl active:scale-95 group opacity-85 hover:opacity-100"
+              title={language === 'ar' ? 'التالي' : 'Next'}
+              aria-label="Next"
+            >
+              <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 ltr:rotate-180 rtl:rotate-0 transition-transform group-hover:scale-110" />
+            </button>
+
             <motion.div
+              key={currentService.id}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20 flex flex-col items-center justify-center"
+              drag
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipeX = offset.x;
+                const swipeY = offset.y;
+                const isRtl = language === 'ar';
+                if (Math.abs(swipeY) > 100 || Math.abs(velocity.y) > 500) {
+                  setSelectedServiceIndex(null);
+                } else if (swipeX < -50 && selectedServiceIndex !== null) {
+                  if (isRtl) setSelectedServiceIndex(selectedServiceIndex > 0 ? selectedServiceIndex - 1 : services.length - 1);
+                  else setSelectedServiceIndex(selectedServiceIndex < services.length - 1 ? selectedServiceIndex + 1 : 0);
+                } else if (swipeX > 50 && selectedServiceIndex !== null) {
+                  if (isRtl) setSelectedServiceIndex(selectedServiceIndex < services.length - 1 ? selectedServiceIndex + 1 : 0);
+                  else setSelectedServiceIndex(selectedServiceIndex > 0 ? selectedServiceIndex - 1 : services.length - 1);
+                }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20 flex flex-col items-center justify-center touch-none cursor-grab active:cursor-grabbing"
             >
-              <button
-                onClick={(e) => { e.stopPropagation(); setSelectedVideo(null); }}
-                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-[250] p-2 bg-black/50 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors border border-white/10 shadow-lg"
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedServiceIndex(null); }} 
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-[400] flex items-center justify-center gap-1.5 px-5 py-2 bg-black/70 hover:bg-amber-500 hover:text-black text-white border border-white/20 rounded-full backdrop-blur-md transition-all duration-300 pointer-events-auto shadow-xl"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
+                <span className="text-sm font-bold">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
               </button>
-              
-              {isIframeVideo(selectedVideo) ? (
-                <iframe
-                  src={getVideoEmbedUrl(selectedVideo, false)}
-                  className="w-full h-full pointer-events-auto"
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+
+              {currentVideoUrl ? (
+                isIframeVideo(currentVideoUrl) ? (
+                  <iframe
+                    src={getVideoEmbedUrl(currentVideoUrl, true)}
+                    className="w-full h-full pointer-events-auto"
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <video
+                    src={getDirectVideoUrl(currentVideoUrl)}
+                    autoPlay
+                    controls
+                    playsInline
+                    className="w-full h-full object-contain pointer-events-auto"
+                  ></video>
+                )
               ) : (
-                <video
-                  src={getDirectVideoUrl(selectedVideo)}
-                  autoPlay
-                  controls
-                  playsInline
-                  className="w-full h-full object-contain pointer-events-auto"
-                ></video>
+                <img 
+                  src={getOptimizedImageUrl(currentService.mediaValue || currentService.cardBgImage)} 
+                  className="w-full h-full object-contain pointer-events-none" 
+                  alt={currentService.title} 
+                />
               )}
+
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none z-20">
+                <div className="transform translate-y-0">
+                  <span className="inline-block px-3 py-1 bg-amber-500 text-black text-xs font-black uppercase tracking-wider rounded-full mb-2 shadow-[0_0_15px_rgba(255,138,0,0.4)]">
+                    {language === 'ar' ? 'خدماتنا المتميزة' : 'Our Services'}
+                  </span>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white drop-shadow-md">
+                    {t(`service.${currentService.id}.title`) || currentService.title}
+                  </h3>
+                  <div className="text-white/70 text-xs sm:text-sm mt-1 font-medium">
+                    {selectedServiceIndex + 1} / {services.length}
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
         )}
@@ -1081,26 +1212,43 @@ const Portfolio = ({ works }: { works: Work[] }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedIndex(null)}
-            className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-12"
+            className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-2 sm:p-6 md:p-12"
+            dir={language === 'ar' ? 'rtl' : 'ltr'}
           >
-            
-            {/* Prev Button */}
+            {/* Top-Right Floating Close Button on Overlay */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
+              className="absolute top-3 right-3 sm:top-5 sm:right-6 z-[350] p-3 sm:p-3.5 bg-black/60 hover:bg-amber-500 hover:text-black text-white border border-white/30 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 active:scale-95 group cursor-pointer flex items-center justify-center"
+              title={language === 'ar' ? 'إغلاق' : 'Close'}
+              aria-label="Close"
+            >
+              <X className="w-6 h-6 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:rotate-90" />
+            </button>
+
+            {/* Swipe Hint Indicator */}
+            <SwipeHint key={`work-hint-${selectedIndex}`} customText={language === 'ar' ? 'اسحب لليمين أو اليسار للتنقل بين الأعمال' : 'Swipe left or right to navigate projects'} />
+
+            {/* Prev Button - Always visible on Mobile & Desktop */}
             {selectedIndex !== null && (
               <button 
                 onClick={(e) => { e.stopPropagation(); setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1); }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-amber-500 text-white flex items-center justify-center rounded-full backdrop-blur-md transition-colors z-[210] hidden md:flex"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/60 hover:bg-amber-500 hover:text-black text-white flex items-center justify-center rounded-full backdrop-blur-md border border-white/20 transition-all z-[250] shadow-2xl active:scale-95 group opacity-85 hover:opacity-100"
+                title={language === 'ar' ? 'السابق' : 'Previous'}
+                aria-label="Previous"
               >
-                <ArrowLeft className="w-6 h-6 ltr:rotate-0 rtl:rotate-180" />
+                <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 ltr:rotate-0 rtl:rotate-180 transition-transform group-hover:scale-110" />
               </button>
             )}
 
-            {/* Next Button */}
+            {/* Next Button - Always visible on Mobile & Desktop */}
             {selectedIndex !== null && (
               <button 
                 onClick={(e) => { e.stopPropagation(); setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-amber-500 text-white flex items-center justify-center rounded-full backdrop-blur-md transition-colors z-[210] hidden md:flex"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-black/60 hover:bg-amber-500 hover:text-black text-white flex items-center justify-center rounded-full backdrop-blur-md border border-white/20 transition-all z-[250] shadow-2xl active:scale-95 group opacity-85 hover:opacity-100"
+                title={language === 'ar' ? 'التالي' : 'Next'}
+                aria-label="Next"
               >
-                <ArrowLeft className="w-6 h-6 ltr:rotate-180 rtl:rotate-0" />
+                <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 ltr:rotate-180 rtl:rotate-0 transition-transform group-hover:scale-110" />
               </button>
             )}
 
@@ -1109,30 +1257,35 @@ const Portfolio = ({ works }: { works: Work[] }) => {
               initial={{ scale: 0.9, y: 50, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: -50, opacity: 0 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
+              drag
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.2}
               onDragEnd={(e, { offset, velocity }) => {
-                const swipe = offset.x;
+                const swipeX = offset.x;
+                const swipeY = offset.y;
                 const isRtl = language === 'ar';
-                if (swipe < -50 && selectedIndex !== null) {
+                if (Math.abs(swipeY) > 100 || Math.abs(velocity.y) > 500) {
+                  setSelectedIndex(null);
+                } else if (swipeX < -50 && selectedIndex !== null) {
                   if (isRtl) setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
                   else setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
-                } else if (swipe > 50 && selectedIndex !== null) {
+                } else if (swipeX > 50 && selectedIndex !== null) {
                   if (isRtl) setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
                   else setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
                 }
               }}
               onClick={(e) => e.stopPropagation()}
-              ref={videoContainerRef} className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
+              ref={videoContainerRef}
+              className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
             >
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
-                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto text-white hover:text-amber-500 z-[250] p-2 bg-black/50 rounded-full shadow-lg"
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }} 
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-[400] flex items-center justify-center gap-1.5 px-5 py-2 bg-black/70 hover:bg-amber-500 hover:text-black text-white border border-white/20 rounded-full backdrop-blur-md transition-all duration-300 pointer-events-auto shadow-xl"
               >
-                <X className="w-8 h-8" />
-              </motion.button>
+                <X className="w-5 h-5" />
+                <span className="text-sm font-bold">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
+              </button>
+
               {selectedWork.videoUrl ? (
                 isIframeVideo(selectedWork.videoUrl) ? (
                   <iframe 
@@ -1148,21 +1301,22 @@ const Portfolio = ({ works }: { works: Work[] }) => {
                     controls 
                     playsInline
                     poster={selectedWork.img}
-                    className="w-full h-full object-contain bg-black pointer-events-auto" 
+                    className="w-full h-full object-contain bg-black pointer-events-auto"
                   />
                 )
               ) : (
-                <img src={getOptimizedImageUrl(selectedWork.img)} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title}  loading="lazy" />
+                <img src={getOptimizedImageUrl(selectedWork.img)} className="w-full h-full object-contain pointer-events-none" alt={selectedWork.title} loading="lazy" />
               )}
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none">
+
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-10 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none z-20">
                 <div className="transform translate-y-0">
                   {selectedWork.category && (
-                    <span className="inline-block px-3 py-1.5 bg-amber-500 text-black text-xs font-black uppercase tracking-wider rounded-full mb-3 shadow-[0_0_15px_rgba(255,138,0,0.4)]">
+                    <span className="inline-block px-3 py-1.5 bg-amber-500 text-black text-xs font-black uppercase tracking-wider rounded-full mb-2 sm:mb-3 shadow-[0_0_15px_rgba(255,138,0,0.4)]">
                       {getCategoryTranslation(selectedWork.category)}
                     </span>
                   )}
-                  <h3 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">{selectedWork.title}</h3>
-                  <div className="text-white/60 text-sm mt-2 font-medium">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white drop-shadow-md">{selectedWork.title}</h3>
+                  <div className="text-white/60 text-xs sm:text-sm mt-1 font-medium">
                     {selectedIndex + 1} / {filteredWorks.length}
                   </div>
                 </div>

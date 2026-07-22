@@ -145,7 +145,7 @@ export const CustomHeroSequence = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5, ease: "easeOut" }}
       className="relative"
-    >
+     style={{'marginBottom': '2px', 'marginRight': '-3px', 'marginLeft': '-5px', 'paddingRight': '-2px', 'paddingLeft': '-2px', 'marginTop': '13px', 'height': '96px', 'width': '330px', 'paddingTop': '-2px', 'paddingBottom': '-2px'}} >
       {/* Particles Overlay Behind Text */}
       <div className="absolute -inset-10 z-[-1] pointer-events-none overflow-hidden">
         {[...Array(15)].map((_, i) => (
@@ -203,7 +203,7 @@ export const CustomHeroSequence = () => {
         <span className="text-gradient w-auto">{title2}</span>
       </h1>
       
-      <p className="text-[12px] sm:text-[16px] md:text-[20px] text-white/90 mb-4 sm:mb-8 leading-[1.6] sm:leading-[1.75] max-w-[70ch] font-normal min-h-[40px] sm:min-h-[80px]">
+      <p className="text-[12px] sm:text-[16px] md:text-[20px] text-white/90 mb-4 sm:mb-8 leading-[1.6] sm:leading-[1.75] max-w-[70ch] font-normal min-h-[40px] sm:min-h-[80px]" style={{'marginTop': '4px', 'paddingTop': '-3px', 'paddingLeft': '-3px', 'paddingRight': '-2px', 'paddingBottom': '-2px', 'marginRight': '0px', 'marginBottom': '16px', 'height': '39px', 'width': '328px', 'lineHeight': '21.2px'}} >
         {sub1}
         <span className="text-amber-500 font-bold">{sub2}</span>
         {sub3}
