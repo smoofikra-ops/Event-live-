@@ -1097,6 +1097,15 @@ const Portfolio = ({ works }: { works: Work[] }) => {
   
   const selectedWork = selectedIndex !== null ? filteredWorks[selectedIndex] : null;
 
+  const closePortfolioViewer = React.useCallback(() => {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(() => {});
+    } else if ((document as any).webkitFullscreenElement && (document as any).webkitExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    }
+    setSelectedIndex(null);
+  }, []);
+
   useEffect(() => {
     // Only preload adjacent images when the modal is open
     if (selectedIndex === null) return;
@@ -1122,13 +1131,13 @@ const Portfolio = ({ works }: { works: Work[] }) => {
       } else if (e.key === 'ArrowRight') {
         setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
       } else if (e.key === 'Escape') {
-        setSelectedIndex(null);
+        closePortfolioViewer();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, filteredWorks.length]);
+  }, [selectedIndex, filteredWorks.length, closePortfolioViewer]);
 
 
 
@@ -1201,13 +1210,13 @@ const Portfolio = ({ works }: { works: Work[] }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedIndex(null)}
+            onClick={closePortfolioViewer}
             className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-2 sm:p-6 md:p-12"
             dir={language === 'ar' ? 'rtl' : 'ltr'}
           >
             {/* Top-Right Floating Close Button on Overlay */}
             <button
-              onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
+              onClick={(e) => { e.stopPropagation(); closePortfolioViewer(); }}
               className="absolute top-3 right-3 sm:top-5 sm:right-6 z-[350] p-3 sm:p-3.5 bg-black/60 hover:bg-amber-500 hover:text-black text-white border border-white/30 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 active:scale-95 group cursor-pointer flex items-center justify-center"
               title={language === 'ar' ? 'إغلاق' : 'Close'}
               aria-label="Close"
@@ -1265,6 +1274,18 @@ const Portfolio = ({ works }: { works: Work[] }) => {
               ref={videoContainerRef}
               className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
             >
+
+              {/* Close button stays visible even when this video container enters fullscreen */}
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); closePortfolioViewer(); }}
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-[500] min-w-12 h-12 px-3 bg-black/85 hover:bg-amber-500 hover:text-black text-white border-2 border-white/70 rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.9)] backdrop-blur-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2"
+                title={language === 'ar' ? 'إغلاق الفيديو' : 'Close video'}
+                aria-label={language === 'ar' ? 'إغلاق الفيديو' : 'Close video'}
+              >
+                <X className="w-7 h-7" />
+                <span className="hidden sm:inline text-sm font-bold">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
+              </button>
 
               {selectedWork.videoUrl ? (
                 isIframeVideo(selectedWork.videoUrl) ? (
