@@ -696,7 +696,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
           className="max-w-4xl"
-        >
+         style={{'height': '290.5px', 'width': '325px', 'paddingTop': '-3px', 'paddingLeft': '0px', 'marginLeft': '-3px', 'marginRight': '2px', 'marginTop': '213px'}} >
 
 
           <motion.div 
@@ -704,7 +704,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
             className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-md border border-black/10 dark:border-white/20 text-amber-500 md:text-amber-400 font-black mb-8"
-            style={{ fontSize: '10px' }}
+            style={{fontSize: '10px', 'paddingBottom': '7px', 'paddingTop': '7px', 'paddingLeft': '23px', 'paddingRight': '22px', 'marginRight': '-3px', 'marginLeft': '2px', 'marginBottom': '-2px', 'marginTop': '4px'}}
           >
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
             {t('hero.badge')}
@@ -712,13 +712,13 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
           
           <CustomHeroSequence />
           
-          <div className="flex flex-wrap gap-4 md:gap-6 relative z-10 mt-6">
+          <div className="flex flex-wrap gap-4 md:gap-6 relative z-10 mt-6" style={{'height': '101px', 'width': '219px', 'paddingBottom': '-2px', 'paddingTop': '-3px', 'paddingLeft': '-12px', 'paddingRight': '30px', 'marginLeft': '20px', 'marginTop': '44px', 'marginRight': '0px'}} >
             <motion.button 
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255,138,0,0.5)" }}
               whileTap={{ scale: 0.95 }}
               onClick={onQuoteClick} 
               className="btn-primary text-base md:text-lg px-8 py-4 md:px-10 md:py-5 relative w-full sm:w-auto"
-            >
+             style={{'marginRight': '-19px', 'paddingBottom': '-4px', 'paddingRight': '73px', 'paddingTop': '-13px', 'paddingLeft': '32px', 'lineHeight': '19px', 'width': '215px', 'textAlign': 'right', 'marginLeft': '-11px', 'height': '40px', 'marginBottom': '-43px', 'marginTop': '1px', 'borderRadius': '20.67772px', 'fontSize': '14px'}} >
               {t('hero.cta')}
             </motion.button>
             <motion.button 
@@ -726,7 +726,7 @@ const Hero = ({ videoUrl, onQuoteClick }: { videoUrl?: string, onQuoteClick: () 
               whileTap={{ scale: 0.95 }}
               onClick={() => document.getElementById('portfolio')?.scrollIntoView()} 
               className="btn-glass text-base md:text-lg px-8 py-4 md:px-10 md:py-5 w-full sm:w-auto text-center"
-            >
+             style={{'width': '228px', 'height': '32px', 'marginLeft': '-8px', 'marginTop': '6px', 'marginBottom': '3px', 'marginRight': '-7px', 'paddingBottom': '9px', 'paddingTop': '3px'}} >
               {t('hero.portfolio')}
             </motion.button>
           </div>
@@ -946,16 +946,19 @@ const Services = ({ services }: { services: Service[] }) => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
+              drag
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.2}
-              onDragEnd={(e, { offset }) => {
-                const swipe = offset.x;
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipeX = offset.x;
+                const swipeY = offset.y;
                 const isRtl = language === 'ar';
-                if (swipe < -50 && selectedServiceIndex !== null) {
+                if (Math.abs(swipeY) > 100 || Math.abs(velocity.y) > 500) {
+                  setSelectedServiceIndex(null);
+                } else if (swipeX < -50 && selectedServiceIndex !== null) {
                   if (isRtl) setSelectedServiceIndex(selectedServiceIndex > 0 ? selectedServiceIndex - 1 : services.length - 1);
                   else setSelectedServiceIndex(selectedServiceIndex < services.length - 1 ? selectedServiceIndex + 1 : 0);
-                } else if (swipe > 50 && selectedServiceIndex !== null) {
+                } else if (swipeX > 50 && selectedServiceIndex !== null) {
                   if (isRtl) setSelectedServiceIndex(selectedServiceIndex < services.length - 1 ? selectedServiceIndex + 1 : 0);
                   else setSelectedServiceIndex(selectedServiceIndex > 0 ? selectedServiceIndex - 1 : services.length - 1);
                 }
@@ -963,6 +966,13 @@ const Services = ({ services }: { services: Service[] }) => {
               onClick={(e) => e.stopPropagation()}
               className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-black rounded-xl md:rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/20 flex flex-col items-center justify-center touch-none cursor-grab active:cursor-grabbing"
             >
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedServiceIndex(null); }} 
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-[400] flex items-center justify-center gap-1.5 px-5 py-2 bg-black/70 hover:bg-amber-500 hover:text-black text-white border border-white/20 rounded-full backdrop-blur-md transition-all duration-300 pointer-events-auto shadow-xl"
+              >
+                <X className="w-5 h-5" />
+                <span className="text-sm font-bold">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
+              </button>
 
               {currentVideoUrl ? (
                 isIframeVideo(currentVideoUrl) ? (
@@ -1056,29 +1066,7 @@ const Portfolio = ({ works }: { works: Work[] }) => {
   const { t, language } = useLanguage();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('portfolio.all');
-  const [viewerControlsVisible, setViewerControlsVisible] = useState(true);
   const videoContainerRef = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (selectedIndex === null) return;
-
-    let hideTimer: ReturnType<typeof setTimeout>;
-    const revealControls = () => {
-      setViewerControlsVisible(true);
-      window.clearTimeout(hideTimer);
-      hideTimer = window.setTimeout(() => setViewerControlsVisible(false), 2200);
-    };
-
-    revealControls();
-    window.addEventListener('pointermove', revealControls, { passive: true });
-    window.addEventListener('touchstart', revealControls, { passive: true });
-
-    return () => {
-      window.clearTimeout(hideTimer);
-      window.removeEventListener('pointermove', revealControls);
-      window.removeEventListener('touchstart', revealControls);
-    };
-  }, [selectedIndex]);
 
   React.useEffect(() => {
     const handleOrientationChange = () => {
@@ -1119,15 +1107,6 @@ const Portfolio = ({ works }: { works: Work[] }) => {
   
   const selectedWork = selectedIndex !== null ? filteredWorks[selectedIndex] : null;
 
-  const closePortfolioViewer = React.useCallback(() => {
-    if (document.fullscreenElement && document.exitFullscreen) {
-      document.exitFullscreen().catch(() => {});
-    } else if ((document as any).webkitFullscreenElement && (document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    }
-    setSelectedIndex(null);
-  }, []);
-
   useEffect(() => {
     // Only preload adjacent images when the modal is open
     if (selectedIndex === null) return;
@@ -1153,13 +1132,13 @@ const Portfolio = ({ works }: { works: Work[] }) => {
       } else if (e.key === 'ArrowRight') {
         setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
       } else if (e.key === 'Escape') {
-        closePortfolioViewer();
+        setSelectedIndex(null);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex, filteredWorks.length, closePortfolioViewer]);
+  }, [selectedIndex, filteredWorks.length]);
 
 
 
@@ -1232,13 +1211,13 @@ const Portfolio = ({ works }: { works: Work[] }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closePortfolioViewer}
+            onClick={() => setSelectedIndex(null)}
             className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-2 sm:p-6 md:p-12"
             dir={language === 'ar' ? 'rtl' : 'ltr'}
           >
             {/* Top-Right Floating Close Button on Overlay */}
             <button
-              onClick={(e) => { e.stopPropagation(); closePortfolioViewer(); }}
+              onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }}
               className="absolute top-3 right-3 sm:top-5 sm:right-6 z-[350] p-3 sm:p-3.5 bg-black/60 hover:bg-amber-500 hover:text-black text-white border border-white/30 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all duration-300 active:scale-95 group cursor-pointer flex items-center justify-center"
               title={language === 'ar' ? 'إغلاق' : 'Close'}
               aria-label="Close"
@@ -1278,16 +1257,19 @@ const Portfolio = ({ works }: { works: Work[] }) => {
               initial={{ scale: 0.9, y: 50, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: -50, opacity: 0 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
+              drag
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.2}
-              onDragEnd={(e, { offset }) => {
-                const swipe = offset.x;
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipeX = offset.x;
+                const swipeY = offset.y;
                 const isRtl = language === 'ar';
-                if (swipe < -50 && selectedIndex !== null) {
+                if (Math.abs(swipeY) > 100 || Math.abs(velocity.y) > 500) {
+                  setSelectedIndex(null);
+                } else if (swipeX < -50 && selectedIndex !== null) {
                   if (isRtl) setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
                   else setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
-                } else if (swipe > 50 && selectedIndex !== null) {
+                } else if (swipeX > 50 && selectedIndex !== null) {
                   if (isRtl) setSelectedIndex(selectedIndex < filteredWorks.length - 1 ? selectedIndex + 1 : 0);
                   else setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredWorks.length - 1);
                 }
@@ -1296,17 +1278,12 @@ const Portfolio = ({ works }: { works: Work[] }) => {
               ref={videoContainerRef}
               className="relative w-full h-[90vh] md:h-auto max-w-5xl md:aspect-video bg-[#111] rounded-xl md:rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 touch-none cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
             >
-
-              {/* Close button stays visible even when this video container enters fullscreen */}
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); closePortfolioViewer(); }}
-                className={`fixed md:absolute top-[max(10px,env(safe-area-inset-top))] md:top-4 right-3 md:right-4 z-[1000] w-16 h-16 md:min-w-12 md:w-auto md:h-12 md:px-3 text-white rounded-2xl md:rounded-full shadow-[0_6px_30px_rgba(0,0,0,0.95)] backdrop-blur-xl transition-all duration-300 active:scale-95 flex flex-col md:flex-row items-center justify-center gap-0 md:gap-2 ${viewerControlsVisible ? 'opacity-100 bg-black/90 border-2 border-amber-400/90 scale-100' : 'opacity-55 bg-white/10 border border-white/30 scale-95'} hover:opacity-100 hover:bg-amber-500 hover:text-black`}
-                title={language === 'ar' ? 'إغلاق الفيديو' : 'Close video'}
-                aria-label={language === 'ar' ? 'إغلاق الفيديو' : 'Close video'}
+              <button 
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex(null); }} 
+                className="absolute top-4 right-4 rtl:left-4 rtl:right-auto z-[400] flex items-center justify-center gap-1.5 px-5 py-2 bg-black/70 hover:bg-amber-500 hover:text-black text-white border border-white/20 rounded-full backdrop-blur-md transition-all duration-300 pointer-events-auto shadow-xl"
               >
-                <span className="block text-[10px] md:text-sm font-black leading-none mb-1 md:mb-0">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
-                <X className="w-7 h-7 md:w-6 md:h-6" strokeWidth={3} />
+                <X className="w-5 h-5" />
+                <span className="text-sm font-bold">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
               </button>
 
               {selectedWork.videoUrl ? (
