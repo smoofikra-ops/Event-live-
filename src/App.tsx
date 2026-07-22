@@ -1056,7 +1056,29 @@ const Portfolio = ({ works }: { works: Work[] }) => {
   const { t, language } = useLanguage();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('portfolio.all');
+  const [viewerControlsVisible, setViewerControlsVisible] = useState(true);
   const videoContainerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    let hideTimer: ReturnType<typeof setTimeout>;
+    const revealControls = () => {
+      setViewerControlsVisible(true);
+      window.clearTimeout(hideTimer);
+      hideTimer = window.setTimeout(() => setViewerControlsVisible(false), 2200);
+    };
+
+    revealControls();
+    window.addEventListener('pointermove', revealControls, { passive: true });
+    window.addEventListener('touchstart', revealControls, { passive: true });
+
+    return () => {
+      window.clearTimeout(hideTimer);
+      window.removeEventListener('pointermove', revealControls);
+      window.removeEventListener('touchstart', revealControls);
+    };
+  }, [selectedIndex]);
 
   React.useEffect(() => {
     const handleOrientationChange = () => {
@@ -1279,12 +1301,12 @@ const Portfolio = ({ works }: { works: Work[] }) => {
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); closePortfolioViewer(); }}
-                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-[500] min-w-12 h-12 px-3 bg-black/85 hover:bg-amber-500 hover:text-black text-white border-2 border-white/70 rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.9)] backdrop-blur-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2"
+                className={`fixed md:absolute top-[max(10px,env(safe-area-inset-top))] md:top-4 right-3 md:right-4 z-[1000] w-16 h-16 md:min-w-12 md:w-auto md:h-12 md:px-3 text-white rounded-2xl md:rounded-full shadow-[0_6px_30px_rgba(0,0,0,0.95)] backdrop-blur-xl transition-all duration-300 active:scale-95 flex flex-col md:flex-row items-center justify-center gap-0 md:gap-2 ${viewerControlsVisible ? 'opacity-100 bg-black/90 border-2 border-amber-400/90 scale-100' : 'opacity-55 bg-white/10 border border-white/30 scale-95'} hover:opacity-100 hover:bg-amber-500 hover:text-black`}
                 title={language === 'ar' ? 'إغلاق الفيديو' : 'Close video'}
                 aria-label={language === 'ar' ? 'إغلاق الفيديو' : 'Close video'}
               >
-                <X className="w-7 h-7" />
-                <span className="hidden sm:inline text-sm font-bold">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
+                <span className="block text-[10px] md:text-sm font-black leading-none mb-1 md:mb-0">{language === 'ar' ? 'إغلاق' : 'Close'}</span>
+                <X className="w-7 h-7 md:w-6 md:h-6" strokeWidth={3} />
               </button>
 
               {selectedWork.videoUrl ? (
